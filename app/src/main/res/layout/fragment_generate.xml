@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".generate">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="75dp"
+                android:layout_marginEnd="75dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="@string/length"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/editLength"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:ems="4"
+                    android:inputType="number"
+                    android:text="8"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/ckCapitals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="75dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="75dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="@string/capital"
+                android:textAlignment="center"
+                android:textSize="23sp" />
+
+            <CheckBox
+                android:id="@+id/ckNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="75dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="75dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="@string/numbers"
+                android:textAlignment="center"
+                android:textSize="23sp" />
+
+            <CheckBox
+                android:id="@+id/ckSymbol"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="75dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="75dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="@string/symbols"
+                android:textAlignment="center"
+                android:textSize="23sp" />
+
+            <Button
+                android:id="@+id/btnGenerateWithCriteria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/generate" />
+
+            <EditText
+                android:id="@+id/editNewPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:editable="false"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnCopyNewPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="@string/copy" />
+
+                <Button
+                    android:id="@+id/btnCreatePassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight=".5"
+                    android:text="@string/addPassword" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

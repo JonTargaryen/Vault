@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/home_icon"
+            android:title="@string/homeTitle" />
+        <item
+            android:id="@+id/nav_new"
+            android:icon="@drawable/add_icon"
+            android:title="@string/NewPassword" />
+        <item
+            android:id="@+id/nav_gen"
+            android:icon="@drawable/gen_icon"
+            android:title="@string/generatePassword" />
+        <item
+            android:id="@+id/nav_list"
+            android:icon="@drawable/list_icon"
+            android:title="@string/passwords" />
+    </group>
+
+
+</menu>

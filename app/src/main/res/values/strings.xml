@@ -1,12 +1,16 @@
 <resources>
-    <string name="app_name">Password Manager</string>
+    <string name="app_name">Password Vault</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="homeTitle">Home</string>
+    <!--Home-->
+    <string name="homeTitle">Vault Home</string>
     <string name="copyright">Copyright @ Benjamin Griggs, Ethan Campana, Soumit Lahiri</string>
     <string name="NewPassword">New Password</string>
     <string name="generatePassword">Generate New Password</string>
     <string name="passwords">Passwords</string>
 
+    <!--New-->
     <string name="name">Name</string>
     <string name="url">URL</string>
     <string name="userName">UserName</string>
@@ -21,6 +25,16 @@
 
     <string name="selectedColor">X</string>
     <string name="unSelectedColor"> </string>
+
+    <!--Generate-->
+    <string name="length">Length</string>
+    <string name="capital">Capitals</string>
+    <string name="numbers">Numbers</string>
+    <string name="symbols">Symbols</string>
+    <string name="addPassword">+ Password</string>
+
+    <!--Passwords-->
+    <string name="searchPasswords">Search Passwords</string>
 
 
     <!--ColorProfile Row 1-->
@@ -41,4 +55,7 @@
     <string name="purple">#b83dba</string>
     <string name="darkPurple">#7b157d</string>
     <string name="brown">#b97a56</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
