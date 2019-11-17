@@ -1,3 +1,44 @@
 <resources>
-    <string name="app_name">Vault</string>
+    <string name="app_name">Password Manager</string>
+
+    <string name="homeTitle">Home</string>
+    <string name="copyright">Copyright @ Benjamin Griggs, Ethan Campana, Soumit Lahiri</string>
+    <string name="NewPassword">New Password</string>
+    <string name="generatePassword">Generate New Password</string>
+    <string name="passwords">Passwords</string>
+
+    <string name="name">Name</string>
+    <string name="url">URL</string>
+    <string name="userName">UserName</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="colorProfile">Color Profile</string>
+    <string name="generate">Generate</string>
+    <string name="copy">Copy</string>
+    <string name="colorHex">Color Hex</string>
+    <string name="launch">Launch</string>
+    <string name="save">Save</string>
+
+    <string name="selectedColor">X</string>
+    <string name="unSelectedColor"> </string>
+
+
+    <!--ColorProfile Row 1-->
+    <string name="grey">#C3C3C3</string>
+    <string name="darkGrey">#585858</string>
+    <string name="black">#000000</string>
+    <string name="darkRed">#88001B</string>
+    <string name="red">#ec1c24</string>
+    <!--Row 2-->
+    <string name="darkOrange">#ff7f27</string>
+    <string name="orange">#ffca18</string>
+    <string name="yellow">#fff771</string>
+    <string name="green">#c4ff0e</string>
+    <string name="darkGreen">#0ed145</string>
+    <!--Row 3-->
+    <string name="blue">#00a8f3</string>
+    <string name="darkBlue">#3f48cc</string>
+    <string name="purple">#b83dba</string>
+    <string name="darkPurple">#7b157d</string>
+    <string name="brown">#b97a56</string>
 </resources>

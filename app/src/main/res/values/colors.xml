@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#000</color>
+    <color name="colorPrimaryDark">#555</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="textColorPrimary">#C28E0E</color>
+
+    <!--ColorProfile Row 1-->
+    <color name="grey">#C3C3C3</color>
+    <color name="darkGrey">#585858</color>
+    <color name="black">#000000</color>
+    <color name="darkRed">#88001B</color>
+    <color name="red">#ec1c24</color>
+    <!--Row 2-->
+    <color name="darkOrange">#ff7f27</color>
+    <color name="orange">#ffca18</color>
+    <color name="yellow">#fff771</color>
+    <color name="green">#c4ff0e</color>
+    <color name="darkGreen">#0ed145</color>
+    <!--Row 3-->
+    <color name="blue">#00a8f3</color>
+    <color name="darkBlue">#3f48cc</color>
+    <color name="purple">#b83dba</color>
+    <color name="darkPurple">#7b157d</color>
+    <color name="brown">#b97a56</color>
+
 </resources>
