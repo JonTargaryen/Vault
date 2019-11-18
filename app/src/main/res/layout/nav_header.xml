@@ -19,7 +19,7 @@
         android:paddingTop="8dp"
         android:textAlignment="center"
         android:gravity="center"
-        android:textSize="30sp"
+        android:textSize="24sp"
         android:text="@string/homeTitle"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/textColorPrimary"/>
