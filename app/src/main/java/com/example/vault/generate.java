@@ -86,7 +86,7 @@ public class generate extends Fragment {
             int charIndex = ran.nextInt(words.length());
             password +=  words.get(charIndex).toString() + " ";
         }
-        if(i > 8){
+        if(i < 8){
             JSONArray words = (JSONArray) o.get(length);
             int charIndex = ran.nextInt(words.length());
             password += words.get(charIndex).toString();
@@ -104,8 +104,12 @@ public class generate extends Fragment {
 
     private String updateBase(String password){
         if(ck_capitals.isChecked()){
-            //int index = ran.nextInt(password.length());
+            int index = ran.nextInt(password.length());
             // password.charAt(index) = Character.toUpperCase(password.charAt(index));
+            char[] letters = password.toCharArray();
+            letters[index] = Character.toUpperCase(letters[index]);
+            password = new String(letters);
+
         }
         if(ck_symbols.isChecked()){
             int charIndex = ran.nextInt(Other.length());
