@@ -6,7 +6,7 @@
     <color name="textColorPrimary">#C28E0E</color>
 
     <!--ColorProfile Row 1-->
-    <color name="grey">#C3C3C3</color>
+    <color name="grey">#989898</color>
     <color name="darkGrey">#585858</color>
     <color name="black">#000000</color>
     <color name="darkRed">#88001B</color>
@@ -14,14 +14,14 @@
     <!--Row 2-->
     <color name="darkOrange">#ff7f27</color>
     <color name="orange">#ffca18</color>
-    <color name="yellow">#fff771</color>
-    <color name="green">#c4ff0e</color>
-    <color name="darkGreen">#0ed145</color>
+    <color name="gold">#c28e0e</color>
+    <color name="green">#0ed145</color>
+    <color name="darkGreen">#026f22</color>
     <!--Row 3-->
     <color name="blue">#00a8f3</color>
     <color name="darkBlue">#3f48cc</color>
     <color name="purple">#b83dba</color>
     <color name="darkPurple">#7b157d</color>
-    <color name="brown">#b97a56</color>
+    <color name="brown">#654321</color>
 
 </resources>

@@ -23,8 +23,7 @@
     <string name="launch">Launch</string>
     <string name="save">Save</string>
 
-    <string name="selectedColor">X</string>
-    <string name="unSelectedColor"> </string>
+    <string name="selectedColor">O</string>
 
     <!--Generate-->
     <string name="length">Length</string>
@@ -38,7 +37,7 @@
 
 
     <!--ColorProfile Row 1-->
-    <string name="grey">#C3C3C3</string>
+    <string name="grey">#989898</string>
     <string name="darkGrey">#585858</string>
     <string name="black">#000000</string>
     <string name="darkRed">#88001B</string>
@@ -46,15 +45,15 @@
     <!--Row 2-->
     <string name="darkOrange">#ff7f27</string>
     <string name="orange">#ffca18</string>
-    <string name="yellow">#fff771</string>
-    <string name="green">#c4ff0e</string>
-    <string name="darkGreen">#0ed145</string>
+    <string name="gold">#c28e0e</string>
+    <string name="green">#0ed145</string>
+    <string name="darkGreen">#026f22</string>
     <!--Row 3-->
     <string name="blue">#00a8f3</string>
     <string name="darkBlue">#3f48cc</string>
     <string name="purple">#b83dba</string>
     <string name="darkPurple">#7b157d</string>
-    <string name="brown">#b97a56</string>
+    <string name="brown">#654321</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
