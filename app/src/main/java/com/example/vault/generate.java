@@ -1,6 +1,7 @@
 package com.example.vault;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -17,6 +18,12 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -25,18 +32,17 @@ import java.util.stream.Collectors;
 
 public class generate extends Fragment {
 
-    private static final String Lowercase = "abcdefghijklmnopqrstuvwxyz";
-    private static final String Uppercase = Lowercase.toUpperCase();
     private static final String Number = "0123456789";
     private static final String Other = "!@#$%&*()_+-=[]?";
-    private String password_Base;
     Random ran = new Random();
     private CheckBox ck_capitals;
     private CheckBox ck_Numbers;
     private CheckBox ck_symbols;
+    private String Password = "";
     private Button b;
     private EditText output;
     private EditText passwordLength;
+
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_generate,container,false);
         ck_capitals = rootView.findViewById(R.id.ckCapitals);
@@ -48,49 +54,81 @@ public class generate extends Fragment {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String length = passwordLength.getText().toString();
-                int i = 0;
-                try{
-                    i =  Integer.parseInt(length);
+                try {
+                   generatePassword();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                catch(Exception e){
-                    Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT);
-                }
-                output.setText(generatePassword(i));
             }
         });
         return rootView;
     }
-    private void updateBase(){
-        password_Base = Lowercase;
+
+    private String randomWord(String password) throws IOException, JSONException{
+        InputStream is = getActivity().getAssets().open("words.json");
+        int size = is.available();
+        byte[]  buffer = new byte[size];
+        is.read(buffer);
+        is.close();
+        String json = new String(buffer,"UTF-8");
+        JSONObject o = new JSONObject(json);
+        String length = passwordLength.getText().toString();
+        int i = Integer.parseInt(length);
+        int remainder = 0;
+        if(i > 8){
+            remainder = i - 8;
+        }
+         password = "";
+        if(remainder > 0){
+            JSONArray words = (JSONArray) o.get(Integer.toString(remainder));
+            int charIndex = ran.nextInt(words.length());
+            password +=  words.get(charIndex).toString() + " ";
+        }
+        if(i > 8){
+            JSONArray words = (JSONArray) o.get(length);
+            int charIndex = ran.nextInt(words.length());
+            password += words.get(charIndex).toString();
+            return password;
+        }
+        JSONArray words = (JSONArray) o.get("8");
+        int charIndex = ran.nextInt(words.length());
+        password += words.get(charIndex).toString();
+        return password;
+    }
+
+
+
+
+
+    private String updateBase(String password){
         if(ck_capitals.isChecked()){
-            password_Base += Uppercase;
+            //int index = ran.nextInt(password.length());
+            // password.charAt(index) = Character.toUpperCase(password.charAt(index));
         }
         if(ck_symbols.isChecked()){
-            password_Base += Other;
+            int charIndex = ran.nextInt(Other.length());
+            char c = Other.charAt(charIndex);
+            password += Character.toString(c);
         }
         if(ck_Numbers.isChecked()){
-            password_Base += Number;
+            int charIndex = ran.nextInt(Number.length());
+            char c = Number.charAt(charIndex);
+            password += Character.toString(c);
         }
-        List<String> letters = Arrays.asList(password_Base.split(""));
-        Collections.shuffle(letters);
-        password_Base = letters.stream().collect(Collectors.joining());
+
+        return password;
+
+
 
     }
 
-    private String generatePassword(int i){
-        if (i <= 1){
-            Toast.makeText(getContext(), "Password must be Longer than 1 char length", Toast.LENGTH_LONG);
-        }
-        updateBase();
-        StringBuilder sb = new StringBuilder(i);
-        for(int k = 0; k < i; k++  ) {
+    private void generatePassword() throws IOException, JSONException {
+        Password = randomWord(Password);
+        Password = updateBase(Password);
+        output.setText(Password);
 
-            int charIndex = ran.nextInt(password_Base.length());
-            char c = password_Base.charAt(charIndex);
-            sb.append(c);
-        }
-        return sb.toString();
     }
 
 }
