@@ -1,5 +1,8 @@
 package com.example.vault;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -43,12 +46,13 @@ public class New_Password extends Fragment implements View.OnClickListener {
     Button btnPurple;
     Button btnDarkPurple;
     Button btnBrown;
+    private ClipboardManager myClipboard;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_new_password,container,false);
-
+        myClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         editHex = (EditText)rootView.findViewById(R.id.editHex);
         editName = (EditText)rootView.findViewById(R.id.editName);
         editURL = (EditText)rootView.findViewById(R.id.editURL);
@@ -92,6 +96,10 @@ public class New_Password extends Fragment implements View.OnClickListener {
         btnDarkPurple.setOnClickListener(this);
         btnBrown = rootView.findViewById(R.id.btnBrown);
         btnBrown.setOnClickListener(this);
+
+        ClipData clipData = myClipboard.getPrimaryClip();
+        ClipData.Item item = clipData.getItemAt(0);
+        editPassword.setText(item.getText().toString());
 
         return rootView;
     }
