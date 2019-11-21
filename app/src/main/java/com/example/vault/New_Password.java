@@ -47,6 +47,12 @@ public class New_Password extends Fragment implements View.OnClickListener {
     Button btnDarkPurple;
     Button btnBrown;
 
+
+    //Functionality Buttons
+    Button btnLaunch;
+    Button btnSave;
+    Button btnGenerate;
+    Button btnCopy;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -96,6 +102,17 @@ public class New_Password extends Fragment implements View.OnClickListener {
         btnBrown = rootView.findViewById(R.id.btnBrown);
         btnBrown.setOnClickListener(this);
 
+
+        //Functionality Buttons
+        btnLaunch = rootView.findViewById(R.id.btnLaunch);
+        btnLaunch.setOnClickListener(this);
+        btnSave = rootView.findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(this);
+        btnGenerate = rootView.findViewById(R.id.btnGenerate);
+        btnGenerate.setOnClickListener(this);
+        btnCopy = rootView.findViewById(R.id.btnCopy);
+        btnCopy.setOnClickListener(this);
+
         editHex.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {            }
@@ -112,6 +129,8 @@ public class New_Password extends Fragment implements View.OnClickListener {
 
         return rootView;
     }
+
+
 
     @Override
     public void onClick(View view) {
