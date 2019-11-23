@@ -1,6 +1,9 @@
 package com.example.vault;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +18,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import java.io.FileOutputStream;
 
 
 public class New_Password extends Fragment implements View.OnClickListener {
@@ -56,14 +64,14 @@ public class New_Password extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_new_password,container,false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_new_password, container, false);
 
-        editHex = (EditText)rootView.findViewById(R.id.editHex);
-        editName = (EditText)rootView.findViewById(R.id.editName);
-        editURL = (EditText)rootView.findViewById(R.id.editURL);
-        editUserName = (EditText)rootView.findViewById(R.id.editUserName);
-        editPassword = (EditText)rootView.findViewById(R.id.editPassword);
-        editEmail = (EditText)rootView.findViewById(R.id.editEmail);
+        editHex = (EditText) rootView.findViewById(R.id.editHex);
+        editName = (EditText) rootView.findViewById(R.id.editName);
+        editURL = (EditText) rootView.findViewById(R.id.editURL);
+        editUserName = (EditText) rootView.findViewById(R.id.editUserName);
+        editPassword = (EditText) rootView.findViewById(R.id.editPassword);
+        editEmail = (EditText) rootView.findViewById(R.id.editEmail);
 
         //Color Picker OnClickListener
         //Row 1
@@ -85,7 +93,7 @@ public class New_Password extends Fragment implements View.OnClickListener {
         btnOrange.setOnClickListener(this);
         btnYellow = rootView.findViewById(R.id.btnGold);
         btnYellow.setOnClickListener(this);
-        btnGreen= rootView.findViewById(R.id.btnGreen);
+        btnGreen = rootView.findViewById(R.id.btnGreen);
         btnGreen.setOnClickListener(this);
         btnDarkGreen = rootView.findViewById(R.id.btnDarkGreen);
         btnDarkGreen.setOnClickListener(this);
@@ -103,15 +111,64 @@ public class New_Password extends Fragment implements View.OnClickListener {
         btnBrown.setOnClickListener(this);
 
 
+
+
+
+
         //Functionality Buttons
         btnLaunch = rootView.findViewById(R.id.btnLaunch);
-        btnLaunch.setOnClickListener(this);
         btnSave = rootView.findViewById(R.id.btnSave);
-        btnSave.setOnClickListener(this);
         btnGenerate = rootView.findViewById(R.id.btnGenerate);
-        btnGenerate.setOnClickListener(this);
         btnCopy = rootView.findViewById(R.id.btnCopy);
-        btnCopy.setOnClickListener(this);
+
+
+        //Code for onClick for Save button
+        //Note that openFileOutput doesn't actually work
+ /*       btnSave.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                try {
+                    FileOutputStream outFs = Context.openFileOutput("totallynotpasswords.json", Context.MODE_PRIVATE);
+
+                    String storageName = editName.getText().toString();
+                    String storageURL = editURL.getText().toString();
+                    String storageUserName = editUserName.getText().toString();
+                    String storagePassword = editPassword.getText().toString();
+                    String storageEmail = editEmail.getText().toString();
+
+
+
+
+
+                } catch (IOException e) {
+                    Toast.makeText(Context.getApplicationContext(), "Error occurred while saving", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+*/
+        //Code for onClick for Launch button
+        //Currently crashing the on launch
+
+        btnLaunch.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                //Declared separately
+                String launchURL = editURL.getText().toString();
+                if (!launchURL.toLowerCase().matches("^\\w+://.*"))
+                {
+                    launchURL = "https://" + launchURL;
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL)));
+                }
+
+
+
+            }
+        });
+
+
 
         editHex.addTextChangedListener(new TextWatcher() {
             @Override
