@@ -1,22 +1,25 @@
 package com.example.vault;
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.net.Uri;
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.view.LayoutInflater;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,14 +27,11 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
-public class generate extends Fragment {
-
+public class genPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+    private DrawerLayout drawer;
+    private Toolbar toolbar;
     private static final String Number = "0123456789";
     private static final String Other = "!@#$%&*()_+-=[]?";
     Random ran = new Random();
@@ -43,29 +43,85 @@ public class generate extends Fragment {
     private EditText output;
     private EditText passwordLength;
 
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_generate,container,false);
-        ck_capitals = rootView.findViewById(R.id.ckCapitals);
-        ck_Numbers = rootView.findViewById(R.id.ckNumber);
-        ck_symbols = rootView.findViewById(R.id.ckSymbol);
-        output = rootView.findViewById(R.id.editNewPassword);
-        passwordLength = rootView.findViewById(R.id.editLength);
-        b = rootView.findViewById(R.id.btnGenerateWithCriteria);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_gen_password);
+
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setTitle("Generate Password");
+        setSupportActionBar(toolbar);
+        NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        ck_capitals = (CheckBox)findViewById(R.id.ckCapitals);
+        ck_Numbers = (CheckBox)findViewById(R.id.ckNumber);
+        ck_symbols = (CheckBox)findViewById(R.id.ckSymbol);
+        output = (EditText)findViewById(R.id.editNewPassword);
+        passwordLength = (EditText)findViewById(R.id.editLength);
+        b = (Button)findViewById(R.id.btnGenerateWithCriteria);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                   generatePassword();
+                    generatePassword();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
-        return rootView;
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.nav_home:
+                navActivity("nav_home");
+                break;
+            case R.id.nav_new:
+                navActivity("nav_new");
+                break;
+            case R.id.nav_gen:
+                navActivity("nav_gen");
+                break;
+            case R.id.nav_list:
+                navActivity("nav_list");
+                break;
+        }
+
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void navActivity(String key){
+        Intent intent = null;
+        switch (key){
+            case "nav_home":
+                finish();
+                break;
+            case "nav_new":
+                intent = new Intent(this, newPassword.class);
+                startActivity(intent);
+                break;
+            case "nav_gen":
+//                Toast.makeText(getApplicationContext(),"Already on New Password", Toast.LENGTH_SHORT).show();
+                break;
+            case "nav_list":
+                intent = new Intent(this, passList.class);
+                startActivity(intent);
+                break;
+        }
     }
 
     private String randomWord(String password) throws IOException, JSONException{
-        InputStream is = getActivity().getAssets().open("words.json");
+        InputStream is = getAssets().open("words.json");
         int size = is.available();
         byte[]  buffer = new byte[size];
         is.read(buffer);
@@ -78,7 +134,7 @@ public class generate extends Fragment {
         if(i > 8){
             remainder = i - 8;
         }
-         password = "";
+        password = "";
         if(remainder > 0){
             JSONArray words = (JSONArray) o.get(Integer.toString(remainder));
             int charIndex = ran.nextInt(words.length());
@@ -95,10 +151,6 @@ public class generate extends Fragment {
         password += words.get(charIndex).toString();
         return password;
     }
-
-
-
-
 
     private String updateBase(String password){
         if(ck_capitals.isChecked()){
@@ -119,18 +171,13 @@ public class generate extends Fragment {
             char c = Number.charAt(charIndex);
             password += Character.toString(c);
         }
-
         return password;
-
-
-
     }
 
     private void generatePassword() throws IOException, JSONException {
         Password = randomWord(Password);
         Password = updateBase(Password);
         output.setText(Password);
-
     }
 
 }
