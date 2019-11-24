@@ -20,29 +20,29 @@ public class home extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_home,container,false);
-
-        //button methods
-        rootView.findViewById(R.id.txtNew).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MainActivity activity = (MainActivity) getActivity();
-                activity.updateFragment("nav_new");
-            }
-        });
-        rootView.findViewById(R.id.txtGenerate).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MainActivity activity = (MainActivity) getActivity();
-                activity.updateFragment("nav_gen");
-            }
-        });
-        rootView.findViewById(R.id.txtList).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MainActivity activity = (MainActivity) getActivity();
-                activity.updateFragment("nav_list");
-            }
-        });
+//
+//        //button methods
+//        rootView.findViewById(R.id.txtNew).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                MainActivity activity = (MainActivity) getActivity();
+//                activity.updateFragment("nav_new");
+//            }
+//        });
+//        rootView.findViewById(R.id.txtGenerate).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                MainActivity activity = (MainActivity) getActivity();
+//                activity.updateFragment("nav_gen");
+//            }
+//        });
+//        rootView.findViewById(R.id.txtList).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                MainActivity activity = (MainActivity) getActivity();
+//                activity.updateFragment("nav_list");
+//            }
+//        });
         return rootView;
     }
 }

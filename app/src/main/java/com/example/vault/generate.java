@@ -70,9 +70,7 @@ public class generate extends Fragment {
             public void onClick(View v) {
                 try {
                    generatePassword();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
