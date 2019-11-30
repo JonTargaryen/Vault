@@ -7,8 +7,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,40 +27,46 @@ import com.google.android.material.navigation.NavigationView;
 public class newPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener{
     private DrawerLayout drawer;
     private Toolbar toolbar;
-    EditText editHex;
-    EditText editName;
-    EditText editURL;
-    EditText editUserName;
-    EditText editPassword;
-    EditText editEmail;
+    private EditText editHex;
+    private EditText editName;
+    private EditText editURL;
+    private EditText editUserName;
+    private EditText editPassword;
+    private EditText editEmail;
+    private static final int request_code = 5;
+    private ClipboardManager myClipboard;
+    private Button btnCopy;
+    private Button btnLaunch;
 
     //Color Buttons
     //Row 1
-    Button btnGrey;
-    Button btnDarkGrey;
-    Button btnBlack;
-    Button btnDarkRed;
-    Button btnRed;
+    private Button btnGrey;
+    private Button btnDarkGrey;
+    private Button btnBlack;
+    private Button btnDarkRed;
+    private Button btnRed;
 
     //Row 2
-    Button btnDarkOrange;
-    Button btnOrange;
-    Button btnYellow;
-    Button btnGreen;
-    Button btnDarkGreen;
+    private Button btnDarkOrange;
+    private Button btnOrange;
+    private Button btnYellow;
+    private Button btnGreen;
+    private Button btnDarkGreen;
 
     //Row 3
-    Button btnBlue;
-    Button btnDarkBlue;
-    Button btnPurple;
-    Button btnDarkPurple;
-    Button btnBrown;
+    private Button btnBlue;
+    private Button btnDarkBlue;
+    private Button btnPurple;
+    private Button btnDarkPurple;
+    private Button btnBrown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_password);
 
+
+        myClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle("New Password");
         setSupportActionBar(toolbar);
@@ -121,15 +131,13 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
             editPassword.setText(password);
         }
 
-
-
         editHex.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                uncheckColors();
+//                uncheckColors();
                 applyColor(charSequence.toString());
             }
 
@@ -137,6 +145,45 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
             public void afterTextChanged(Editable editable) {            }
         });
 
+        btnCopy = (Button)findViewById(R.id.btnCopy);
+        btnCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipData myClip;
+                String text = editPassword.getText().toString();
+                myClip = ClipData.newPlainText("text", text);
+                myClipboard.setPrimaryClip(myClip);
+                Toast.makeText(getApplicationContext(),"Copied to Clipboard",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnLaunch = (Button)findViewById(R.id.btnLaunch);
+        btnLaunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String URL = editURL.getText().toString();
+                if (URL.equals("") || URL.equals(null)){
+                    Toast.makeText(getApplicationContext(),"No URL to Launch",Toast.LENGTH_SHORT).show();
+                } else{
+                    Intent mIntent= new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
+                    startActivity(mIntent);
+                }
+            }
+        });
+    }
+
+    public void moveToGenerateActivity(View view){
+        Intent intent = new Intent(this, genPassword_New.class);
+        startActivityForResult(intent,request_code);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if ((requestCode == request_code)&&(resultCode ==RESULT_OK)){
+            String generatedPassword = data.getStringExtra("genPassword_New");
+            editPassword.setText(generatedPassword);
+        }
     }
 
     @Override

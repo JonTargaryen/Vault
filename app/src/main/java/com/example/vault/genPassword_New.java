@@ -11,10 +11,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -32,8 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
-public class genPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-
+public class genPassword_New extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private static final String Number = "0123456789";
@@ -43,17 +39,14 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
     private CheckBox ck_Numbers;
     private CheckBox ck_symbols;
     public String Password = "";
-    private Button b;
+    private Button btnGenerateWithCriteria;
     private EditText output;
     private EditText passwordLength;
-    private ClipboardManager myClipboard;
-    private Button copy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gen_password);
-        myClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        setContentView(R.layout.activity_gen_password__new);
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle("Generate Password");
@@ -72,8 +65,8 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
         ck_symbols = (CheckBox)findViewById(R.id.ckSymbol);
         output = (EditText)findViewById(R.id.editNewPassword);
         passwordLength = (EditText)findViewById(R.id.editLength);
-        b = (Button)findViewById(R.id.btnGenerateWithCriteria);
-        b.setOnClickListener(new View.OnClickListener() {
+        btnGenerateWithCriteria = (Button)findViewById(R.id.btnGenerateWithCriteria);
+        btnGenerateWithCriteria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -83,20 +76,20 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
                 }
             }
         });
-        b = findViewById(R.id.btnGenerateWithCriteria);
-        copy = findViewById(R.id.btnCopyNewPassword);
+        btnGenerateWithCriteria = findViewById(R.id.btnGenerateWithCriteria);
 
-        copy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipData myClip;
-                String text = output.getText().toString();
-                myClip = ClipData.newPlainText("text", text);
-                myClipboard.setPrimaryClip(myClip);
-                Toast.makeText(getApplicationContext(),"Copied to Clipboard",Toast.LENGTH_SHORT).show();
-            }
-        });
+    }
 
+    public void returnToNewPassword(View View){
+        try{
+            String generatedPassword = output.getText().toString();
+            Intent mIntent= new Intent(this, genPassword_New.class);
+            mIntent.putExtra("genPassword_New",generatedPassword);
+            setResult(RESULT_OK, mIntent);
+            finish();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void CreatePassword(View view){
@@ -104,7 +97,6 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
         intent.putExtra("Password", Password);
         startActivity(intent);
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -138,7 +130,8 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
                 startActivity(intent);
                 break;
             case "nav_gen":
-//                Toast.makeText(getApplicationContext(),"Already on New Password", Toast.LENGTH_SHORT).show();
+                intent = new Intent(this, genPassword.class);
+                startActivity(intent);
                 break;
             case "nav_list":
                 intent = new Intent(this, passList.class);
@@ -206,5 +199,4 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
         Password = updateBase(Password);
         output.setText(Password);
     }
-
 }

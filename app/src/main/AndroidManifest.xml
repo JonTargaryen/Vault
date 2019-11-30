@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_lock_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".passList"></activity>
+        <activity android:name=".genPassword_New"></activity>
+        <activity android:name=".passList" />
         <activity android:name=".genPassword" />
         <activity android:name=".newPassword" />
         <activity android:name=".MainActivity">
