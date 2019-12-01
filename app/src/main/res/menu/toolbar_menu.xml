@@ -5,7 +5,7 @@
     <item android:id="@+id/actionBarIcon"
         android:title="Icon"
         android:orderInCategory="100"
-        android:icon="@drawable/home"
+        android:icon="@drawable/lock"
         app:showAsAction="always"/>
 
 </menu>

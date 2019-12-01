@@ -8,10 +8,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -21,13 +23,13 @@ import org.w3c.dom.Text;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setTitle("Password Vault");
         setSupportActionBar(toolbar);
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -38,36 +40,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-
+        //button methods
+        findViewById(R.id.txtNew).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navActivity("nav_new");
+            }
+        });
+        findViewById(R.id.txtGenerate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navActivity("nav_gen");
+            }
+        });
+        findViewById(R.id.txtList).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navActivity("nav_list");
+            }
+        });
     }
 
     @Override
     protected void onResume() {
-        updateFragment("nav_home");
+        navActivity("nav_home");
         super.onResume();
     }
 
-    public void updateFragment(String key){
+    public void navActivity(String key){
+        Intent intent = null;
         switch (key){
             case "nav_home":
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new home()).commit();
-                toolbar.setTitle("Vault Home");
+//                Toast.makeText(getApplicationContext(), "Already on home.",Toast.LENGTH_SHORT).show();
                 break;
             case "nav_new":
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new New_Password()).commit();
-                toolbar.setTitle("New Password");
+                intent = new Intent(this, newPassword.class);
+                startActivity(intent);
                 break;
             case "nav_gen":
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new generate()).commit();
-                toolbar.setTitle("Generate");
+                intent = new Intent(this, genPassword.class);
+                startActivity(intent);
                 break;
             case "nav_list":
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new passwords()).commit();
-                toolbar.setTitle("Passwords");
+                intent = new Intent(this, passList.class);
+                startActivity(intent);
                 break;
         }
     }
@@ -76,16 +92,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.nav_home:
-                updateFragment("nav_home");
+                navActivity("nav_home");
                 break;
             case R.id.nav_new:
-                updateFragment("nav_new");
+                navActivity("nav_new");
                 break;
             case R.id.nav_gen:
-                updateFragment("nav_gen");
+                navActivity("nav_gen");
                 break;
             case R.id.nav_list:
-                updateFragment("nav_list");
+                navActivity("nav_list");
                 break;
         }
 

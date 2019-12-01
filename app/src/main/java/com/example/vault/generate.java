@@ -1,5 +1,7 @@
 package com.example.vault;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.net.Uri;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -15,8 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,12 +25,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
+import java.util.Random;
 public class generate extends Fragment {
 
     private static final String Number = "0123456789";
@@ -40,29 +37,45 @@ public class generate extends Fragment {
     private CheckBox ck_symbols;
     private String Password = "";
     private Button b;
+    private Button copy;
+    private Button btnPassword;
     private EditText output;
     private EditText passwordLength;
+    private ClipboardManager myClipboard;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        myClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_generate,container,false);
         ck_capitals = rootView.findViewById(R.id.ckCapitals);
         ck_Numbers = rootView.findViewById(R.id.ckNumber);
         ck_symbols = rootView.findViewById(R.id.ckSymbol);
+        btnPassword = rootView.findViewById(R.id.btnCreatePassword);
         output = rootView.findViewById(R.id.editNewPassword);
         passwordLength = rootView.findViewById(R.id.editLength);
         b = rootView.findViewById(R.id.btnGenerateWithCriteria);
+        copy = rootView.findViewById(R.id.btnCopyNewPassword);
+
+        copy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipData myClip;
+                String text = output.getText().toString();
+                myClip = ClipData.newPlainText("text", text);
+                myClipboard.setPrimaryClip(myClip);
+            }
+        });
+
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                    generatePassword();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
+
         return rootView;
     }
 
@@ -132,7 +145,6 @@ public class generate extends Fragment {
         Password = randomWord(Password);
         Password = updateBase(Password);
         output.setText(Password);
-
     }
 
 }

@@ -1,28 +1,20 @@
 package com.example.vault;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import java.io.FileOutputStream;
 
 
 public class New_Password extends Fragment implements View.OnClickListener {
@@ -54,24 +46,19 @@ public class New_Password extends Fragment implements View.OnClickListener {
     Button btnPurple;
     Button btnDarkPurple;
     Button btnBrown;
+    private ClipboardManager myClipboard;
 
-
-    //Functionality Buttons
-    Button btnLaunch;
-    Button btnSave;
-    Button btnGenerate;
-    Button btnCopy;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_new_password, container, false);
-
-        editHex = (EditText) rootView.findViewById(R.id.editHex);
-        editName = (EditText) rootView.findViewById(R.id.editName);
-        editURL = (EditText) rootView.findViewById(R.id.editURL);
-        editUserName = (EditText) rootView.findViewById(R.id.editUserName);
-        editPassword = (EditText) rootView.findViewById(R.id.editPassword);
-        editEmail = (EditText) rootView.findViewById(R.id.editEmail);
+        ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_new_password,container,false);
+        myClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        editHex = (EditText)rootView.findViewById(R.id.editHex);
+        editName = (EditText)rootView.findViewById(R.id.editName);
+        editURL = (EditText)rootView.findViewById(R.id.editURL);
+        editUserName = (EditText)rootView.findViewById(R.id.editUserName);
+        editPassword = (EditText)rootView.findViewById(R.id.editPassword);
+        editEmail = (EditText)rootView.findViewById(R.id.editEmail);
 
         //Color Picker OnClickListener
         //Row 1
@@ -93,7 +80,7 @@ public class New_Password extends Fragment implements View.OnClickListener {
         btnOrange.setOnClickListener(this);
         btnYellow = rootView.findViewById(R.id.btnGold);
         btnYellow.setOnClickListener(this);
-        btnGreen = rootView.findViewById(R.id.btnGreen);
+        btnGreen= rootView.findViewById(R.id.btnGreen);
         btnGreen.setOnClickListener(this);
         btnDarkGreen = rootView.findViewById(R.id.btnDarkGreen);
         btnDarkGreen.setOnClickListener(this);
@@ -110,190 +97,15 @@ public class New_Password extends Fragment implements View.OnClickListener {
         btnBrown = rootView.findViewById(R.id.btnBrown);
         btnBrown.setOnClickListener(this);
 
-
-
-
-
-
-        //Functionality Buttons
-        btnLaunch = rootView.findViewById(R.id.btnLaunch);
-        btnSave = rootView.findViewById(R.id.btnSave);
-        btnGenerate = rootView.findViewById(R.id.btnGenerate);
-        btnCopy = rootView.findViewById(R.id.btnCopy);
-
-
-        //Code for onClick for Save button
-        //Note that openFileOutput doesn't actually work
- /*       btnSave.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view) {
-                try {
-                    FileOutputStream outFs = Context.openFileOutput("totallynotpasswords.json", Context.MODE_PRIVATE);
-
-                    String storageName = editName.getText().toString();
-                    String storageURL = editURL.getText().toString();
-                    String storageUserName = editUserName.getText().toString();
-                    String storagePassword = editPassword.getText().toString();
-                    String storageEmail = editEmail.getText().toString();
-
-
-
-
-
-                } catch (IOException e) {
-                    Toast.makeText(Context.getApplicationContext(), "Error occurred while saving", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-*/
-        //Code for onClick for Launch button
-        //Currently crashing the on launch
-
-        btnLaunch.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                //Declared separately
-                String launchURL = editURL.getText().toString();
-                if (!launchURL.toLowerCase().matches("^\\w+://.*"))
-                {
-                    launchURL = "https://" + launchURL;
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL)));
-                }
-
-
-
-            }
-        });
-
-
-
-        editHex.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                uncheckColors();
-                applyColor(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {            }
-        });
+        ClipData clipData = myClipboard.getPrimaryClip();
+        ClipData.Item item = clipData.getItemAt(0);
+        editPassword.setText(item.getText().toString());
 
         return rootView;
     }
 
-
-
     @Override
     public void onClick(View view) {
-        uncheckColors();
-        String newColor = "";
-        switch (view.getId()){
-            //Row 1
-            case R.id.btnGrey:
-                btnGrey.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.grey);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-            case R.id.btnDarkGrey:
-                btnDarkGrey.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.darkGrey);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-            case R.id.btnBlack:
-                btnBlack.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.black);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-            case R.id.btnDarkRed:
-                btnDarkRed.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.darkRed);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-            case R.id.btnRed:
-                btnRed.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.red);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-
-            // Row 2
-            case R.id.btnDarkOrange:
-                btnDarkOrange.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.darkOrange);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-            case R.id.btnOrange:
-                btnOrange.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.orange);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-            case R.id.btnGold:
-                btnYellow.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.gold);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-            case R.id.btnGreen:
-                btnGreen.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.green);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-            case R.id.btnDarkGreen:
-                btnDarkGreen.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.darkGreen);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-
-            // Row 3
-            case R.id.btnBlue:
-                btnBlue.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.blue);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-            case R.id.btnDarkBlue:
-                btnDarkBlue.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.darkBlue);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-            case R.id.btnPurple:
-                btnPurple.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.purple);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-            case R.id.btnDarkPurple:
-                btnDarkPurple.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.darkPurple);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-            case R.id.btnBrown:
-                btnBrown.setText(getString(R.string.selectedColor));
-                newColor = getString(R.string.brown);
-                editHex.setText(newColor);
-                applyColor(newColor);
-                break;
-
-        }
-    }
-
-    private void uncheckColors(){
         //Row 1
         btnGrey.setText(null);
         btnDarkGrey.setText(null);
@@ -314,21 +126,163 @@ public class New_Password extends Fragment implements View.OnClickListener {
         btnPurple.setText(null);
         btnDarkPurple.setText(null);
         btnBrown.setText(null);
-    }
+        switch (view.getId()){
+            //Row 1
+            case R.id.btnGrey:
+                btnGrey.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.grey));
+                editHex.setTextColor(Color.parseColor(getString(R.string.grey)));
+                editName.setTextColor(Color.parseColor(getString(R.string.grey)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.grey)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.grey)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.grey)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.grey)));
+                break;
+            case R.id.btnDarkGrey:
+                btnDarkGrey.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.darkGrey));
+                editHex.setTextColor(Color.parseColor(getString(R.string.darkGrey)));
+                editName.setTextColor(Color.parseColor(getString(R.string.darkGrey)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.darkGrey)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.darkGrey)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.darkGrey)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.darkGrey)));
+                break;
+            case R.id.btnBlack:
+                btnBlack.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.black));
+                editHex.setTextColor(Color.parseColor(getString(R.string.black)));
+                editName.setTextColor(Color.parseColor(getString(R.string.black)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.black)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.black)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.black)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.black)));
+                break;
+            case R.id.btnDarkRed:
+                btnDarkRed.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.darkRed));
+                editHex.setTextColor(Color.parseColor(getString(R.string.darkRed)));
+                editName.setTextColor(Color.parseColor(getString(R.string.darkRed)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.darkRed)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.darkRed)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.darkRed)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.darkRed)));
+                break;
+            case R.id.btnRed:
+                btnRed.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.red));
+                editHex.setTextColor(Color.parseColor(getString(R.string.red)));
+                editName.setTextColor(Color.parseColor(getString(R.string.red)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.red)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.red)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.red)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.red)));
+                break;
 
-    private void applyColor(String hex){
-        try {
-            if(hex.charAt(0)!= '#') {
-                hex = "#" + hex;
-            }
-            editHex.setTextColor(Color.parseColor(hex));
-            editName.setTextColor(Color.parseColor(hex));
-            editURL.setTextColor(Color.parseColor(hex));
-            editUserName.setTextColor(Color.parseColor(hex));
-            editPassword.setTextColor(Color.parseColor(hex));
-            editEmail.setTextColor(Color.parseColor(hex));
-        }catch (Exception e){
-            Toast.makeText(getContext(),"Color: " + hex + " is not valid.",Toast.LENGTH_SHORT).show();
+            // Row 2
+            case R.id.btnDarkOrange:
+                btnDarkOrange.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.darkOrange));
+                editHex.setTextColor(Color.parseColor(getString(R.string.darkOrange)));
+                editName.setTextColor(Color.parseColor(getString(R.string.darkOrange)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.darkOrange)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.darkOrange)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.darkOrange)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.darkOrange)));
+                break;
+            case R.id.btnOrange:
+                btnOrange.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.orange));
+                editHex.setTextColor(Color.parseColor(getString(R.string.orange)));
+                editName.setTextColor(Color.parseColor(getString(R.string.orange)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.orange)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.orange)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.orange)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.orange)));
+                break;
+            case R.id.btnGold:
+                btnYellow.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.gold));
+                editHex.setTextColor(Color.parseColor(getString(R.string.gold)));
+                editName.setTextColor(Color.parseColor(getString(R.string.gold)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.gold)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.gold)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.gold)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.gold)));
+                break;
+            case R.id.btnGreen:
+                btnGreen.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.green));
+                editHex.setTextColor(Color.parseColor(getString(R.string.green)));
+                editName.setTextColor(Color.parseColor(getString(R.string.green)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.green)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.green)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.green)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.green)));
+                break;
+            case R.id.btnDarkGreen:
+                btnDarkGreen.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.darkGreen));
+                editHex.setTextColor(Color.parseColor(getString(R.string.darkGreen)));
+                editName.setTextColor(Color.parseColor(getString(R.string.darkGreen)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.darkGreen)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.darkGreen)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.darkGreen)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.darkGreen)));
+                break;
+
+            // Row 3
+            case R.id.btnBlue:
+                btnBlue.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.blue));
+                editHex.setTextColor(Color.parseColor(getString(R.string.blue)));
+                editName.setTextColor(Color.parseColor(getString(R.string.blue)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.blue)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.blue)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.blue)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.blue)));
+                break;
+            case R.id.btnDarkBlue:
+                btnDarkBlue.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.darkBlue));
+                editHex.setTextColor(Color.parseColor(getString(R.string.darkBlue)));
+                editName.setTextColor(Color.parseColor(getString(R.string.darkBlue)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.darkBlue)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.darkBlue)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.darkBlue)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.darkBlue)));
+                break;
+            case R.id.btnPurple:
+                btnPurple.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.purple));
+                editHex.setTextColor(Color.parseColor(getString(R.string.purple)));
+                editName.setTextColor(Color.parseColor(getString(R.string.purple)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.purple)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.purple)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.purple)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.purple)));
+                break;
+            case R.id.btnDarkPurple:
+                btnDarkPurple.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.darkPurple));
+                editHex.setTextColor(Color.parseColor(getString(R.string.darkPurple)));
+                editName.setTextColor(Color.parseColor(getString(R.string.darkPurple)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.darkPurple)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.darkPurple)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.darkPurple)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.darkPurple)));
+                break;
+            case R.id.btnBrown:
+                btnBrown.setText(getString(R.string.selectedColor));
+                editHex.setText(getString(R.string.brown));
+                editHex.setTextColor(Color.parseColor(getString(R.string.brown)));
+                editName.setTextColor(Color.parseColor(getString(R.string.brown)));
+                editURL.setTextColor(Color.parseColor(getString(R.string.brown)));
+                editUserName.setTextColor(Color.parseColor(getString(R.string.brown)));
+                editPassword.setTextColor(Color.parseColor(getString(R.string.brown)));
+                editEmail.setTextColor(Color.parseColor(getString(R.string.brown)));
+                break;
+
         }
     }
 }
