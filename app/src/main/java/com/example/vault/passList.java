@@ -14,16 +14,28 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class passList extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener{
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.ArrayList;
+
+public class passList extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout drawer;
     private Toolbar toolbar;
-
+    private ListView lvPasswords;
+    private ArrayList<Password> passList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +54,34 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        passList = new ArrayList<Password>();
+
+//        File[] listFiles = new File(mp3Path).
+//        String fileName, extName;
+//        for (File file : listFiles) {
+//            fileName = file.getName();
+//            extName = fileName.substring(fileName.length() - 3);
+//            if (extName.equals((String) "mp3"))
+//                mp3List.add(fileName);
+//        }
+//
+//        lvPasswords = (ListView) findViewById(R.id.lvPasswords);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_list_item_single_choice, mp3List);
+//        lvPasswords.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+//        lvPasswords.setAdapter(adapter);
+//        lvPasswords.setItemChecked(0, true);
+//
+//        lvPasswords
+//                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                    public void onItemClick(AdapterView<?> arg0, View arg1,
+//                                            int arg2, long arg3) {
+//                        selectedMP3 = mp3List.get(arg2);
+//                        seek = 0;
+//                        stopMusic();
+//                        playMusic();
+//                    }
+//                });
     }
 
     @Override
@@ -85,10 +125,27 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-
+    private void loadPasswords(){
+        try {
+            File file = new File(getDataDir(), getString(R.string.json));
+            int objectIndex = -1;
+            if (file.createNewFile()) {
+                BufferedWriter output = null;
+                try {
+                    JSONObject root = new JSONObject();
+                    JSONArray passwords = new JSONArray();
+                    root.put("passwords", passwords);
+                    output = new BufferedWriter(new FileWriter(file));
+                    output.write(root.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    output.close();
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"Load Failed", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -23,32 +23,36 @@
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/editSearch"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/editSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginBottom="10dp"
-                    android:drawableStart="@drawable/search"
-                    android:ems="10"
-                    android:hint="@string/searchPasswords"
-                    android:inputType="textPersonName"
-                    android:textAlignment="center" />
-            </LinearLayout>
-
-        </ScrollView>
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="10dp"
+                android:drawableStart="@drawable/search"
+                android:ems="10"
+                android:hint="@string/searchPasswords"
+                android:inputType="textPersonName"
+                android:textAlignment="center" />
+            <ListView
+                android:id="@+id/lvPasswords"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="10dp"
+                android:divider="@color/black"
+                android:dividerHeight="2dp">
+            </ListView>
+        </LinearLayout>
 
     </LinearLayout>
 

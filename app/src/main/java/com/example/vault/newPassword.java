@@ -24,6 +24,15 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+
 public class newPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener{
     private DrawerLayout drawer;
     private Toolbar toolbar;
@@ -160,12 +169,17 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
         btnLaunch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String URL = editURL.getText().toString();
-                if (URL.equals("") || URL.equals(null)){
-                    Toast.makeText(getApplicationContext(),"No URL to Launch",Toast.LENGTH_SHORT).show();
-                } else{
-                    Intent mIntent= new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
-                    startActivity(mIntent);
+                try {
+                    String URL = editURL.getText().toString();
+                    if (URL.equals("") || URL.equals(null)) {
+                        Toast.makeText(getApplicationContext(), "No URL to Launch", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
+                        startActivity(mIntent);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),"Not a valid URL",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -183,13 +197,75 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
 
                 Password pass = new Password(
                         Name, URL, UserName, Password, Email, ColorHex);
-                try{
-                    pass.savePasswordToFile(getDataDir());
-                    Toast.makeText(getApplicationContext(),"Succesfully Saved.",Toast.LENGTH_SHORT).show();
+                try {
+                    File file = new File(getDataDir(),getString(R.string.json));
+                    int objectIndex = -1;
+                    if (file.createNewFile()) {
+                        BufferedWriter output = null;
+                        try {
+                            JSONObject root = new JSONObject();
+                            JSONArray passwords = new JSONArray();
+                            root.put("passwords", passwords);
+                            output = new BufferedWriter(new FileWriter(file));
+                            output.write(root.toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            output.close();
+                        }
+                    }
+
+                    BufferedReader input = null;
+                    String json = "";
+                    try{
+                        input = new BufferedReader(new FileReader(file));
+                        String line;
+                        while ((line = input.readLine()) != null) {
+                            json += line;
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }finally {
+                        input.close();
+                    }
+
+                    JSONObject root = new JSONObject(json);
+                    JSONArray passwords = root.getJSONArray("passwords");
+
+                    //search for this entry already in the json file
+                    for (int i = 0; i < passwords.length(); i++) {
+                        JSONObject iteratorJSON = passwords.getJSONObject(i);
+                        if (iteratorJSON.get("Name").equals(pass.getName())) {
+                            passwords.remove(i);
+                            objectIndex = i;
+                            break;
+                        }
+                    }
+
+                    JSONObject thisPassword = new JSONObject();
+                    thisPassword.put("Name", pass.getName());
+                    thisPassword.put("URL", pass.getURL());
+                    thisPassword.put("UserName", pass.getUserName());
+                    thisPassword.put("Password", pass.getPassword());
+                    thisPassword.put("Email", pass.getEmail());
+                    thisPassword.put("ColorHex", pass.getColorHex());
+
+                    passwords.put(thisPassword);
+                    root.put("passwords",passwords);
+                    BufferedWriter output = null;
+                    try {
+                        output = new BufferedWriter(new FileWriter(file));
+                        output.write(root.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        output.close();
+                    }
+
+                    Toast.makeText(getApplicationContext(),"Saved Successfully.",Toast.LENGTH_SHORT).show();
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(),"Save Failed.",Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
