@@ -26,8 +26,10 @@ import com.google.android.material.navigation.NavigationView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
@@ -35,7 +37,7 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private ListView lvPasswords;
-    private ArrayList<Password> passList;
+    private ArrayList<String> passNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,34 +56,7 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        passList = new ArrayList<Password>();
-
-//        File[] listFiles = new File(mp3Path).
-//        String fileName, extName;
-//        for (File file : listFiles) {
-//            fileName = file.getName();
-//            extName = fileName.substring(fileName.length() - 3);
-//            if (extName.equals((String) "mp3"))
-//                mp3List.add(fileName);
-//        }
-//
-//        lvPasswords = (ListView) findViewById(R.id.lvPasswords);
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_list_item_single_choice, mp3List);
-//        lvPasswords.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-//        lvPasswords.setAdapter(adapter);
-//        lvPasswords.setItemChecked(0, true);
-//
-//        lvPasswords
-//                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    public void onItemClick(AdapterView<?> arg0, View arg1,
-//                                            int arg2, long arg3) {
-//                        selectedMP3 = mp3List.get(arg2);
-//                        seek = 0;
-//                        stopMusic();
-//                        playMusic();
-//                    }
-//                });
+        loadPasswords();
     }
 
     @Override
@@ -137,12 +112,52 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
                     root.put("passwords", passwords);
                     output = new BufferedWriter(new FileWriter(file));
                     output.write(root.toString());
+                    return;
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
                     output.close();
                 }
             }
+            BufferedReader input = null;
+            String json = "";
+            try{
+                input = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = input.readLine()) != null) {
+                    json += line;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                input.close();
+            }
+
+            passNames = new ArrayList<String>();
+
+            JSONObject root = new JSONObject(json);
+            JSONArray passwords = root.getJSONArray("passwords");
+
+            for(int i =0; i<passwords.length();i++){
+                JSONObject iteratorJSON = passwords.getJSONObject(i);
+                passNames.add(iteratorJSON.getString("Name"));
+            }
+
+            lvPasswords = (ListView)findViewById(R.id.lvPasswords);
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, passNames);
+            lvPasswords.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            lvPasswords.setAdapter(adapter);
+
+            lvPasswords.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        public void onItemClick(AdapterView<?> arg0, View arg1,
+                                                int arg2, long arg3) {
+                            Intent intent = new Intent(getApplicationContext(), editPassword.class);
+                            intent.putExtra("index",arg2);
+                            startActivity(intent);
+                        }
+                    });
         }catch (Exception e){
             e.printStackTrace();
             Toast.makeText(getApplicationContext(),"Load Failed", Toast.LENGTH_SHORT).show();

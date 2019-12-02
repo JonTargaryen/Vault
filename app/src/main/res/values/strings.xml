@@ -8,6 +8,7 @@
     <string name="homeTitle">Vault Home</string>
     <string name="copyright">Copyright @ Benjamin Griggs, Ethan Campana, Soumit Lahiri</string>
     <string name="NewPassword">Store Password</string>
+    <string name="EditPassword">Edit Password</string>
     <string name="generatePassword">Generate New Password</string>
     <string name="passwords">Passwords</string>
 

@@ -16,8 +16,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -34,33 +32,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SignatureException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
+import java.util.ArrayList;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
-public class newPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener{
-
-    //Initialize Encryption
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String SAMPLE_ALIAS = "MYALIAS";
-    private EnCryptor encryptor;
-    private DeCryptor decryptor;
-    private String TextToEncrypt;
-    private String EncryptedText;
-    private String DecryptedText;
-
-
-
+public class editPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener{
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private EditText editHex;
@@ -100,12 +74,12 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_password);
+        setContentView(R.layout.activity_edit_password);
 
 
         myClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.NewPassword));
+        toolbar.setTitle(getString(R.string.EditPassword));
         setSupportActionBar(toolbar);
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -211,7 +185,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
-        btnSave = findViewById(R.id.btnSave);
+        btnSave = (Button)findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -234,7 +208,6 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                             JSONArray passwords = new JSONArray();
                             root.put("passwords", passwords);
                             output = new BufferedWriter(new FileWriter(file));
-                            //Encrypt here
                             output.write(root.toString());
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -246,8 +219,6 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                     BufferedReader input = null;
                     String json = "";
                     try{
-
-                        //Decrypt here
                         input = new BufferedReader(new FileReader(file));
                         String line;
                         while ((line = input.readLine()) != null) {
@@ -285,7 +256,6 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                     BufferedWriter output = null;
                     try {
                         output = new BufferedWriter(new FileWriter(file));
-                        //Encrypt Here
                         output.write(root.toString());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -301,79 +271,53 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
-        //Encryption / Decryption onCreate
-        encryptor = new EnCryptor();
 
-        try
-        {
-            decryptor = new DeCryptor();
-        }
-        catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | IOException e)
-        {
-            e.printStackTrace();
-        }
+        //SET PASSED VALUES
+        Intent intent = getIntent();
+        int index = intent.getIntExtra("index",-1);
 
+        if(index != -1){
+            try {
+                File file = new File(getDataDir(), getString(R.string.json));
+                BufferedReader input = null;
+                String json = "";
+                try {
+                    input = new BufferedReader(new FileReader(file));
+                    String line;
+                    while ((line = input.readLine()) != null) {
+                        json += line;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    input.close();
+                }
 
+                JSONObject root = new JSONObject(json);
+                JSONArray passwords = root.getJSONArray("passwords");
+                JSONObject selectedPassword = passwords.getJSONObject(index);
 
+                editName.setText(selectedPassword.getString("Name"));
+                editURL.setText(selectedPassword.getString("URL"));
+                editUserName.setText(selectedPassword.getString("UserName"));
+                editPassword.setText(selectedPassword.getString("Password"));
+                editEmail.setText(selectedPassword.getString("Email"));
+                editHex.setText(selectedPassword.getString("ColorHex"));
+                uncheckColors();
+                applyColor(selectedPassword.getString("ColorHex"));
 
-
-    }
-
-    //Method for the encryption of text
-    private void encryptText()
-    {
-        try
-        {
-            final byte[] encryptedText = encryptor.encryptText(SAMPLE_ALIAS, TextToEncrypt);
-            EncryptedText = Base64.encodeToString(encryptedText,Base64.DEFAULT);
-
-
-        }
-
-        catch (UnrecoverableEntryException | NoSuchAlgorithmException | NoSuchProviderException |
-                KeyStoreException | IOException | NoSuchPaddingException | InvalidKeyException e)
-
-        {
-            Log.e(TAG, "onClick() called with: " + e.getMessage(), e);
-        }
-
-        catch (InvalidAlgorithmParameterException | SignatureException |
-                IllegalBlockSizeException | BadPaddingException e)
-        {
-            e.printStackTrace();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
-    //Method for the decryption of text
-    private void decryptText()
-    {
-        try
-        {
-            DecryptedText = (decryptor.decryptData(SAMPLE_ALIAS, encryptor.getEncryption(), encryptor.getIv()));
-
-        }
-
-        catch (UnrecoverableEntryException | NoSuchAlgorithmException |
-                KeyStoreException | NoSuchPaddingException | NoSuchProviderException |
-                IOException | InvalidKeyException e)
-        {
-            Log.e(TAG, "decryptData() called with: " + e.getMessage(), e);
-        }
-
-        catch (IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public void moveToGenerateActivity(View view)
-    {
+    public void moveToGenerateActivity(View view){
         Intent intent = new Intent(this, genPassword_New.class);
         startActivityForResult(intent,request_code);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if ((requestCode == request_code)&&(resultCode ==RESULT_OK)){
