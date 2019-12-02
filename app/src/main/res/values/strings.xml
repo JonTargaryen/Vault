@@ -3,7 +3,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="Return">Return to Password</string>
-
     <!--Home-->
     <string name="homeTitle">Vault Home</string>
     <string name="copyright">Copyright @ Benjamin Griggs, Ethan Campana, Soumit Lahiri</string>

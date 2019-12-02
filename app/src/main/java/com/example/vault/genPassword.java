@@ -56,7 +56,7 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
         myClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setTitle("Generate Password");
+        toolbar.setTitle(getString(R.string.generatePassword));
         setSupportActionBar(toolbar);
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -96,15 +96,13 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
                 Toast.makeText(getApplicationContext(),"Copied to Clipboard",Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     public void CreatePassword(View view){
         Intent intent = new Intent(this, newPassword.class);
-        intent.putExtra("Password", Password);
+        intent.putExtra("com.example.vault.Password", Password);
         startActivity(intent);
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -138,7 +136,7 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
                 startActivity(intent);
                 break;
             case "nav_gen":
-//                Toast.makeText(getApplicationContext(),"Already on New Password", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),"Already on New com.example.vault.Password", Toast.LENGTH_SHORT).show();
                 break;
             case "nav_list":
                 intent = new Intent(this, passList.class);
@@ -182,7 +180,7 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
     private String updateBase(String password){
         if(ck_capitals.isChecked()){
             int index = ran.nextInt(password.length());
-            // password.charAt(index) = Character.toUpperCase(password.charAt(index));
+            // com.example.vault.Password.charAt(index) = Character.toUpperCase(com.example.vault.Password.charAt(index));
             char[] letters = password.toCharArray();
             letters[index] = Character.toUpperCase(letters[index]);
             password = new String(letters);

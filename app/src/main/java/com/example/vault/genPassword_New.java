@@ -49,7 +49,7 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
         setContentView(R.layout.activity_gen_password__new);
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setTitle("Generate Password");
+        toolbar.setTitle(getString(R.string.generatePassword));
         setSupportActionBar(toolbar);
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -94,7 +94,7 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
 
     public void CreatePassword(View view){
         Intent intent = new Intent(this, newPassword.class);
-        intent.putExtra("Password", Password);
+        intent.putExtra("com.example.vault.Password", Password);
         startActivity(intent);
     }
 
@@ -175,7 +175,7 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
     private String updateBase(String password){
         if(ck_capitals.isChecked()){
             int index = ran.nextInt(password.length());
-            // password.charAt(index) = Character.toUpperCase(password.charAt(index));
+            // com.example.vault.Password.charAt(index) = Character.toUpperCase(com.example.vault.Password.charAt(index));
             char[] letters = password.toCharArray();
             letters[index] = Character.toUpperCase(letters[index]);
             password = new String(letters);
