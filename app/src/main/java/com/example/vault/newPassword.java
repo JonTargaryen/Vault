@@ -211,7 +211,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
-        btnSave = (Button)findViewById(R.id.btnSave);
+        btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -234,6 +234,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                             JSONArray passwords = new JSONArray();
                             root.put("passwords", passwords);
                             output = new BufferedWriter(new FileWriter(file));
+                            //Encrypt here
                             output.write(root.toString());
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -245,6 +246,8 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                     BufferedReader input = null;
                     String json = "";
                     try{
+
+                        //Decrypt here
                         input = new BufferedReader(new FileReader(file));
                         String line;
                         while ((line = input.readLine()) != null) {
@@ -282,6 +285,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                     BufferedWriter output = null;
                     try {
                         output = new BufferedWriter(new FileWriter(file));
+                        //Encrypt Here
                         output.write(root.toString());
                     } catch (Exception e) {
                         e.printStackTrace();
