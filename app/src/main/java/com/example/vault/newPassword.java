@@ -37,6 +37,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
     private ClipboardManager myClipboard;
     private Button btnCopy;
     private Button btnLaunch;
+    private Button btnSave;
 
     //Color Buttons
     //Row 1
@@ -68,7 +69,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
 
         myClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setTitle("New Password");
+        toolbar.setTitle(getString(R.string.NewPassword));
         setSupportActionBar(toolbar);
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -78,8 +79,6 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                 R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-
 
         editHex = (EditText)findViewById(R.id.editHex);
         editName = (EditText)findViewById(R.id.editName);
@@ -127,7 +126,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
 
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            String password = getIntent().getStringExtra("Password");
+            String password = getIntent().getStringExtra("com.example.vault.Password");
             editPassword.setText(password);
         }
 
@@ -167,6 +166,30 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                 } else{
                     Intent mIntent= new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
                     startActivity(mIntent);
+                }
+            }
+        });
+
+        btnSave = (Button)findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String Name = editName.getText().toString();
+                String URL = editURL.getText().toString();
+                String UserName = editUserName.getText().toString();
+                String Password = editPassword.getText().toString();
+                String Email = editEmail.getText().toString();
+                String ColorHex = editHex.getText().toString();
+
+                Password pass = new Password(
+                        Name, URL, UserName, Password, Email, ColorHex);
+                try{
+                    pass.savePasswordToFile(getDataDir());
+                    Toast.makeText(getApplicationContext(),"Succesfully Saved.",Toast.LENGTH_SHORT).show();
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),"Save Failed.",Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -214,7 +237,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                 finish();
                 break;
             case "nav_new":
-//                Toast.makeText(getApplicationContext(),"Already on New Password", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),"Already on New com.example.vault.Password", Toast.LENGTH_SHORT).show();
                 break;
             case "nav_gen":
                 intent = new Intent(this, genPassword.class);

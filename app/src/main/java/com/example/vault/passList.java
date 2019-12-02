@@ -31,7 +31,7 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
         setContentView(R.layout.activity_pass_list);
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setTitle("Passwords");
+        toolbar.setTitle(getString(R.string.passwords));
         setSupportActionBar(toolbar);
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
