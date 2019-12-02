@@ -16,6 +16,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -32,8 +34,33 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class newPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener{
+
+    //Initialize Encryption
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String SAMPLE_ALIAS = "MYALIAS";
+    private EnCryptor encryptor;
+    private DeCryptor decryptor;
+    private String TextToEncrypt;
+    private String EncryptedText;
+    private String DecryptedText;
+
+
+
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private EditText editHex;
@@ -269,14 +296,80 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                 }
             }
         });
+
+        //Encryption / Decryption onCreate
+        encryptor = new EnCryptor();
+
+        try
+        {
+            decryptor = new DeCryptor();
+        }
+        catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | IOException e)
+        {
+            e.printStackTrace();
+        }
+
+
+
+
+
     }
 
-    public void moveToGenerateActivity(View view){
+    //Method for the encryption of text
+    private void encryptText()
+    {
+        try
+        {
+            final byte[] encryptedText = encryptor.encryptText(SAMPLE_ALIAS, TextToEncrypt);
+            EncryptedText = Base64.encodeToString(encryptedText,Base64.DEFAULT);
+
+
+        }
+
+        catch (UnrecoverableEntryException | NoSuchAlgorithmException | NoSuchProviderException |
+                KeyStoreException | IOException | NoSuchPaddingException | InvalidKeyException e)
+
+        {
+            Log.e(TAG, "onClick() called with: " + e.getMessage(), e);
+        }
+
+        catch (InvalidAlgorithmParameterException | SignatureException |
+                IllegalBlockSizeException | BadPaddingException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    //Method for the decryption of text
+    private void decryptText()
+    {
+        try
+        {
+            DecryptedText = (decryptor.decryptData(SAMPLE_ALIAS, encryptor.getEncryption(), encryptor.getIv()));
+
+        }
+
+        catch (UnrecoverableEntryException | NoSuchAlgorithmException |
+                KeyStoreException | NoSuchPaddingException | NoSuchProviderException |
+                IOException | InvalidKeyException e)
+        {
+            Log.e(TAG, "decryptData() called with: " + e.getMessage(), e);
+        }
+
+        catch (IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void moveToGenerateActivity(View view)
+    {
         Intent intent = new Intent(this, genPassword_New.class);
         startActivityForResult(intent,request_code);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
 
         if ((requestCode == request_code)&&(resultCode ==RESULT_OK)){
