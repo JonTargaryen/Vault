@@ -55,7 +55,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
     private static final String SAMPLE_ALIAS = "MYALIAS";
     private EnCryptor encryptor;
     private DeCryptor decryptor;
-    private String TextToEncrypt;
+    // private String TextToEncrypt;
     private String EncryptedText;
     private String DecryptedText;
 
@@ -286,6 +286,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                     try {
                         output = new BufferedWriter(new FileWriter(file));
                         //Encrypt Here
+                        //output.write(encryptText(root.toString()));
                         output.write(root.toString());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -320,7 +321,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
     }
 
     //Method for the encryption of text
-    private void encryptText()
+    private String encryptText(String TextToEncrypt)
     {
         try
         {
@@ -342,10 +343,12 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
         {
             e.printStackTrace();
         }
+
+        return EncryptedText;
     }
 
     //Method for the decryption of text
-    private void decryptText()
+    private String decryptText()
     {
         try
         {
@@ -364,6 +367,8 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
         {
             e.printStackTrace();
         }
+
+        return DecryptedText;
     }
 
     public void moveToGenerateActivity(View view)
