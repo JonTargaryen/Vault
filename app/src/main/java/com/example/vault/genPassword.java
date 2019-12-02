@@ -100,7 +100,7 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
 
     public void CreatePassword(View view){
         Intent intent = new Intent(this, newPassword.class);
-        intent.putExtra("com.example.vault.Password", Password);
+        intent.putExtra("Password", Password);
         startActivity(intent);
     }
 
