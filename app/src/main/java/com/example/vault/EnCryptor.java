@@ -1,5 +1,7 @@
 package com.example.vault;
 
+//Explanation for code: https://medium.com/@josiassena/using-the-android-keystore-system-to-store-sensitive-information-3a56175a454b
+
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 
