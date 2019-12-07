@@ -85,7 +85,7 @@ public interface Controllable {
             if (remainder > 0) {
                 JSONArray words = (JSONArray) o.get(Integer.toString(remainder));
                 int charIndex = ran.nextInt(words.length());
-                password += words.get(charIndex).toString() + " ";
+                password += words.get(charIndex).toString();
             }
             if (i < 8) {
                 JSONArray words = (JSONArray) o.get(length);
