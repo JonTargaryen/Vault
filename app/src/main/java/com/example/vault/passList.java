@@ -28,6 +28,7 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
     private Toolbar toolbar;
     private ListView lvPasswords;
     private ArrayList<String> passNames;
+    private static final String SAMPLE_ALIAS = "MYALIAS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,12 +99,14 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
 
             passNames = new ArrayList<String>();
 
-            for(int i =0; i<passwords.length();i++){
+            for(int i =0; i<passwords.length();i++)
+            {
+
                 JSONObject iteratorJSON = passwords.getJSONObject(i);
                 passNames.add(iteratorJSON.getString("Name"));
             }
 
-            lvPasswords = (ListView)findViewById(R.id.lvPasswords);
+            lvPasswords = findViewById(R.id.lvPasswords);
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_list_item_1, passNames);
