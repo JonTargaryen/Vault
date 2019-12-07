@@ -7,9 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,16 +14,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Random;
 
 public class genPassword_New extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Controllable {
@@ -46,23 +39,27 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gen_password__new);
 
+        //Toolbar setup
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.generatePassword));
         setSupportActionBar(toolbar);
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Drawer setup
         drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        //Interface Setup
         ck_capitals = (CheckBox)findViewById(R.id.ckCapitals);
         ck_Numbers = (CheckBox)findViewById(R.id.ckNumber);
         ck_symbols = (CheckBox)findViewById(R.id.ckSymbol);
         editNewPassword = (EditText)findViewById(R.id.editNewPassword);
         editLength = (EditText)findViewById(R.id.editLength);
+        //Generate button setup
         btnGenerateWithCriteria = (Button)findViewById(R.id.btnGenerateWithCriteria);
         btnGenerateWithCriteria.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,8 +71,6 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
                 }
             }
         });
-        btnGenerateWithCriteria = findViewById(R.id.btnGenerateWithCriteria);
-
     }
 
     public void returnToNewPassword(View View){
@@ -96,6 +91,7 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
         startActivity(intent);
     }
 
+    //Drawer Navigation
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
@@ -117,6 +113,7 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
         return true;
     }
 
+    //Drawer Navigation
     private void navActivity(String key){
         Intent intent = null;
         switch (key){

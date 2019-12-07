@@ -85,7 +85,7 @@ public interface Controllable {
             if (remainder > 0) {
                 JSONArray words = (JSONArray) o.get(Integer.toString(remainder));
                 int charIndex = ran.nextInt(words.length());
-                password += words.get(charIndex).toString() + " ";
+                password += words.get(charIndex).toString();
             }
             if (i < 8) {
                 JSONArray words = (JSONArray) o.get(length);
@@ -117,7 +117,7 @@ public interface Controllable {
                     passwords = new JSONArray();
                     root.put("passwords", passwords);
                     output = new BufferedWriter(new FileWriter(file));
-                    
+                    //Encrypt string and write to file
                     output.write(AESUtils.encrypt(root.toString()));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -134,6 +134,7 @@ public interface Controllable {
                 while ((line = input.readLine())!= null){
                     json +=line;
                 }
+                //decrypt string
                 json = AESUtils.decrypt(json);
             }
             catch (Exception e){
@@ -141,6 +142,7 @@ public interface Controllable {
             }finally {
                 input.close();
             }
+            //parse decrypted string to JSONObject
             root = new JSONObject(json);
             passwords = root.getJSONArray("passwords");
 

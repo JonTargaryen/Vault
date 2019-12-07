@@ -27,11 +27,7 @@ import com.google.android.material.navigation.NavigationView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 
 /*
     THIS ACTIVITY IS ESEENTIALLY IDENTICAL TO newPassword
@@ -235,11 +231,13 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    //Handle Generate Button's Activity request
     public void moveToGenerateActivity(View view){
         Intent intent = new Intent(this, genPassword_New.class);
         startActivityForResult(intent,request_code);
     }
 
+    //Handle Generate Button's Return Value
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -249,6 +247,7 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    //Menu Navigation
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
@@ -270,6 +269,7 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    //Menu Navigation
     private void navActivity(String key){
         Intent intent = null;
         switch (key){
@@ -290,6 +290,8 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
                 break;
         }
     }
+
+    //Color Button's OnClick Method
     @Override
     public void onClick(View view) {
         uncheckColors();
@@ -394,6 +396,7 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    //Set all Color Button's to no text
     private void uncheckColors(){
         //Row 1
         btnGrey.setText(null);
@@ -417,6 +420,7 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
         btnBrown.setText(null);
     }
 
+    //Apply given Hex Code to All Activity Edit Texts
     private void applyColor(String hex){
         try {
             if(hex.charAt(0)!= '#') {
