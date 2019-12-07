@@ -1,5 +1,7 @@
 package com.example.vault;
 
+//Reference code: https://wajahatkarim.com/2018/08/encrypt-/-decrypt-strings-in-android/
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
