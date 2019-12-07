@@ -11,10 +11,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -24,12 +21,9 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Random;
 
 public class genPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Controllable{
@@ -86,9 +80,7 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
                 }
             }
         });
-        btnGenerateWithCriteria = findViewById(R.id.btnGenerateWithCriteria);
         btnCopy = findViewById(R.id.btnCopyNewPassword);
-
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,12 +93,14 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
         });
     }
 
+    //Navigate and copy password to newPassword Activity
     public void CreatePassword(View view){
         Intent intent = new Intent(this, newPassword.class);
         intent.putExtra("Password", newPassword);
         startActivity(intent);
     }
 
+    //Drawer Navigation
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
@@ -128,6 +122,7 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+    //Drawer Navigation
     private void navActivity(String key){
         Intent intent = null;
         switch (key){
@@ -149,6 +144,7 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    //added symbols or numbers based on selected checkboxes
     private String updateBase(String password){
         if(ck_capitals.isChecked()){
             int index = ran.nextInt(password.length());
@@ -175,5 +171,4 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
         newPassword = updateBase(newPassword);
         editNewPassword.setText(newPassword);
     }
-
 }
