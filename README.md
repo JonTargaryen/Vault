@@ -1,5 +1,5 @@
 # Vault
-CNIT 355 project by Soumit Lahiri, Benjamin Griggs, Ethan Campana. Fall 2019. 
+## CNIT 355 project by Soumit Lahiri, Benjamin Griggs, Ethan Campana. Fall 2019. 
 
 
 
@@ -13,21 +13,25 @@ An advantage of using an external service is that passwords can be accessed thro
 
 This application stores and encrypts information locally, meaning that the data is never being sent to the Internet. This also means that should access to the physical device go away, so would access to the passwords. As a result, the use case is for those seeking a more accessible and secure alternative to a physical notebook or journal to store passwords, and the target audience is those who distrust external parties. 
 
-##Technical Specifications: 
-The minimum API level required is API 27.
-No external dependencies or libraries have been utilized 
-AES is the encryption algorithm utilized
-A "Credential Profile" is a Name, Username, Password, Email, and URL, along with a Color associated with the profile for increased memory recall
-Password generation occurs by using an imported dictionary of words and modifying and combining them to meet specifications. Dictionary is currently stored in words.json. Current dictionary is acceptable for a prototype. 
+## Technical Specifications: 
+1) The minimum API level required is API 27.
+2) No external dependencies or libraries have been utilized 
+3) AES is the encryption algorithm utilized
+4) A "Credential Profile" is a Name, Username, Password, Email, and URL, along with a Color associated with the profile for increased memory recall
+5) Credential Profiles are saved as JSON objects
+6) Password generation occurs by using an imported dictionary of words and modifying and combining them to meet specifications. 
+7) Dictionary is currently stored in words.json. Current dictionary is acceptable for a prototype. 
+8) Passwords are currently stored in TotallyNotPasswords.json
 
 
-##Features
-Vault Home: Allows user access to the following. 
-Store Password: 
+## Features
+1) Vault Home: Allows user access to the following. 
+2) Store Password: 
 Input a Credential Profile, allow random generation of password, and save Credential Profile. 
-Generate New Password:
+3) Generate New Password:
 Separated random generation of passwords. User can specify end password length, and other aspects like including Capitals, Numbers, and Special Characters
-Passwords: Edit and view saved credential profiles. 
+4) Passwords: 
+Edit and view saved credential profiles. 
 
 Credential Profiles are securely encrypted when saved in Store Password, and securely decrypted when accessed through Passwords. 
 
@@ -35,13 +39,13 @@ Credential Profiles are securely encrypted when saved in Store Password, and sec
 
 
 
-##Ideas for future features:
+## Ideas for future features:
 *Due to lack of resources, the following features are "nice to have" features. While the app is still operational without them, having these be added would increase the quality of the application.*
 
-Operational search function for looking up saved credential profiles
-Have Credential profile colors be displayed when viewing / editing them 
-Add categorization for types of credential profile
-Utilize biometrics and require authentication before creating or accessing credential profile
-Delete credential profiles
-Expand dictionary used for password generation
+1) Operational search function for looking up saved credential profiles
+2) Have Credential profile colors be displayed when viewing / editing them 
+3) Add categorization for types of credential profile
+4) Utilize biometrics and require authentication before creating or accessing credential profile
+5) Delete credential profiles
+6) Expand dictionary used for password generation
 
