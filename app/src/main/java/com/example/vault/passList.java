@@ -33,7 +33,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-public class passList extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class passList extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Controllable{
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private ListView lvPasswords;
@@ -84,7 +84,8 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
         Intent intent = null;
         switch (key){
             case "nav_home":
-                finish();
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
             case "nav_new":
                 intent = new Intent(this, newPassword.class);
@@ -103,40 +104,9 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
     private void loadPasswords(){
         try {
             File file = new File(getDataDir(), getString(R.string.json));
-            int objectIndex = -1;
-            if (file.createNewFile()) {
-                BufferedWriter output = null;
-                try {
-                    JSONObject root = new JSONObject();
-                    JSONArray passwords = new JSONArray();
-                    root.put("passwords", passwords);
-                    output = new BufferedWriter(new FileWriter(file));
-                    output.write(root.toString());
-                    return;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    output.close();
-                }
-            }
-            BufferedReader input = null;
-            String json = "";
-            try{
-                input = new BufferedReader(new FileReader(file));
-                String line;
-                while ((line = input.readLine()) != null) {
-                    json += line;
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }finally {
-                input.close();
-            }
+            JSONArray passwords = readPasswords(getDataDir(), file);
 
             passNames = new ArrayList<String>();
-
-            JSONObject root = new JSONObject(json);
-            JSONArray passwords = root.getJSONArray("passwords");
 
             for(int i =0; i<passwords.length();i++){
                 JSONObject iteratorJSON = passwords.getJSONObject(i);
@@ -146,7 +116,7 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
             lvPasswords = (ListView)findViewById(R.id.lvPasswords);
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_list_item_1, passNames);
+                    android.R.layout.simple_list_item_2, passNames);
             lvPasswords.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             lvPasswords.setAdapter(adapter);
 

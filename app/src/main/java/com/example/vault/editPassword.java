@@ -32,9 +32,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.ArrayList;
 
-public class editPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener{
+/*
+    THIS ACTIVITY IS ESEENTIALLY IDENTICAL TO newPassword
+     WITH THE INTENTION OF COMBINING THE TWO CLASSES IN A
+     FUTURE VERSION
+*/
+public class editPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, Controllable{
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private EditText editHex;
@@ -76,7 +80,7 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_password);
 
-
+        //Setup Toolbar
         myClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.EditPassword));
@@ -84,12 +88,14 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Setup Navigation Drawer
         drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        //Intialize Edit
         editHex = (EditText)findViewById(R.id.editHex);
         editName = (EditText)findViewById(R.id.editName);
         editURL = (EditText)findViewById(R.id.editURL);
@@ -134,6 +140,7 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
         btnBrown = (Button)findViewById(R.id.btnBrown);
         btnBrown.setOnClickListener(this);
 
+        //Handle response from genPassword activity
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             String password = getIntent().getStringExtra("Password");
@@ -198,76 +205,8 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
 
                 Password pass = new Password(
                         Name, URL, UserName, Password, Email, ColorHex);
-                try {
-                    File file = new File(getDataDir(),getString(R.string.json));
-                    int objectIndex = -1;
-                    if (file.createNewFile()) {
-                        BufferedWriter output = null;
-                        try {
-                            JSONObject root = new JSONObject();
-                            JSONArray passwords = new JSONArray();
-                            root.put("passwords", passwords);
-                            output = new BufferedWriter(new FileWriter(file));
-                            output.write(root.toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            output.close();
-                        }
-                    }
 
-                    BufferedReader input = null;
-                    String json = "";
-                    try{
-                        input = new BufferedReader(new FileReader(file));
-                        String line;
-                        while ((line = input.readLine()) != null) {
-                            json += line;
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }finally {
-                        input.close();
-                    }
-
-                    JSONObject root = new JSONObject(json);
-                    JSONArray passwords = root.getJSONArray("passwords");
-
-                    //search for this entry already in the json file
-                    for (int i = 0; i < passwords.length(); i++) {
-                        JSONObject iteratorJSON = passwords.getJSONObject(i);
-                        if (iteratorJSON.get("Name").equals(pass.getName())) {
-                            passwords.remove(i);
-                            objectIndex = i;
-                            break;
-                        }
-                    }
-
-                    JSONObject thisPassword = new JSONObject();
-                    thisPassword.put("Name", pass.getName());
-                    thisPassword.put("URL", pass.getURL());
-                    thisPassword.put("UserName", pass.getUserName());
-                    thisPassword.put("Password", pass.getPassword());
-                    thisPassword.put("Email", pass.getEmail());
-                    thisPassword.put("ColorHex", pass.getColorHex());
-
-                    passwords.put(thisPassword);
-                    root.put("passwords",passwords);
-                    BufferedWriter output = null;
-                    try {
-                        output = new BufferedWriter(new FileWriter(file));
-                        output.write(root.toString());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        output.close();
-                    }
-
-                    Toast.makeText(getApplicationContext(),"Saved Successfully.",Toast.LENGTH_SHORT).show();
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(),"Save Failed.",Toast.LENGTH_SHORT).show();
-                }
+                savePassword(pass, view, getApplicationContext(),getDataDir(), getString(R.string.json));
             }
         });
 
@@ -351,7 +290,8 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
         Intent intent = null;
         switch (key){
             case "nav_home":
-                finish();
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
             case "nav_new":
 //                Toast.makeText(getApplicationContext(),"Already on New com.example.vault.Password", Toast.LENGTH_SHORT).show();

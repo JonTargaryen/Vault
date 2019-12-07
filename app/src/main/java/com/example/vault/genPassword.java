@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
-public class genPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class genPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Controllable{
 
     private DrawerLayout drawer;
     private Toolbar toolbar;
@@ -42,12 +42,12 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
     private CheckBox ck_capitals;
     private CheckBox ck_Numbers;
     private CheckBox ck_symbols;
-    public String Password = "";
-    private Button b;
-    private EditText output;
-    private EditText passwordLength;
+    public String newPassword = "";
+    private Button btnGenerateWithCriteria;
+    private EditText editNewPassword;
+    private EditText editLength;
     private ClipboardManager myClipboard;
-    private Button copy;
+    private Button btnCopy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +55,14 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
         setContentView(R.layout.activity_gen_password);
         myClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
+        //Setup Toolbar
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.generatePassword));
         setSupportActionBar(toolbar);
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Setup Navigation Drawer
         drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open,R.string.navigation_drawer_close);
@@ -70,10 +72,11 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
         ck_capitals = (CheckBox)findViewById(R.id.ckCapitals);
         ck_Numbers = (CheckBox)findViewById(R.id.ckNumber);
         ck_symbols = (CheckBox)findViewById(R.id.ckSymbol);
-        output = (EditText)findViewById(R.id.editNewPassword);
-        passwordLength = (EditText)findViewById(R.id.editLength);
-        b = (Button)findViewById(R.id.btnGenerateWithCriteria);
-        b.setOnClickListener(new View.OnClickListener() {
+        editNewPassword = (EditText)findViewById(R.id.editNewPassword);
+        editLength = (EditText)findViewById(R.id.editLength);
+
+        btnGenerateWithCriteria = (Button)findViewById(R.id.btnGenerateWithCriteria);
+        btnGenerateWithCriteria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -83,14 +86,14 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
                 }
             }
         });
-        b = findViewById(R.id.btnGenerateWithCriteria);
-        copy = findViewById(R.id.btnCopyNewPassword);
+        btnGenerateWithCriteria = findViewById(R.id.btnGenerateWithCriteria);
+        btnCopy = findViewById(R.id.btnCopyNewPassword);
 
-        copy.setOnClickListener(new View.OnClickListener() {
+        btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ClipData myClip;
-                String text = output.getText().toString();
+                String text = editNewPassword.getText().toString();
                 myClip = ClipData.newPlainText("text", text);
                 myClipboard.setPrimaryClip(myClip);
                 Toast.makeText(getApplicationContext(),"Copied to Clipboard",Toast.LENGTH_SHORT).show();
@@ -100,7 +103,7 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
 
     public void CreatePassword(View view){
         Intent intent = new Intent(this, newPassword.class);
-        intent.putExtra("Password", Password);
+        intent.putExtra("Password", newPassword);
         startActivity(intent);
     }
 
@@ -129,7 +132,8 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
         Intent intent = null;
         switch (key){
             case "nav_home":
-                finish();
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
             case "nav_new":
                 intent = new Intent(this, newPassword.class);
@@ -145,38 +149,6 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
-    private String randomWord(String password) throws IOException, JSONException{
-        InputStream is = getAssets().open("words.json");
-        int size = is.available();
-        byte[]  buffer = new byte[size];
-        is.read(buffer);
-        is.close();
-        String json = new String(buffer,"UTF-8");
-        JSONObject o = new JSONObject(json);
-        String length = passwordLength.getText().toString();
-        int i = Integer.parseInt(length);
-        int remainder = 0;
-        if(i > 8){
-            remainder = i - 8;
-        }
-        password = "";
-        if(remainder > 0){
-            JSONArray words = (JSONArray) o.get(Integer.toString(remainder));
-            int charIndex = ran.nextInt(words.length());
-            password +=  words.get(charIndex).toString() + " ";
-        }
-        if(i < 8){
-            JSONArray words = (JSONArray) o.get(length);
-            int charIndex = ran.nextInt(words.length());
-            password += words.get(charIndex).toString();
-            return password;
-        }
-        JSONArray words = (JSONArray) o.get("8");
-        int charIndex = ran.nextInt(words.length());
-        password += words.get(charIndex).toString();
-        return password;
-    }
-
     private String updateBase(String password){
         if(ck_capitals.isChecked()){
             int index = ran.nextInt(password.length());
@@ -184,7 +156,6 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
             char[] letters = password.toCharArray();
             letters[index] = Character.toUpperCase(letters[index]);
             password = new String(letters);
-
         }
         if(ck_symbols.isChecked()){
             int charIndex = ran.nextInt(Other.length());
@@ -200,9 +171,9 @@ public class genPassword extends AppCompatActivity implements NavigationView.OnN
     }
 
     private void generatePassword() throws IOException, JSONException {
-        Password = randomWord(Password);
-        Password = updateBase(Password);
-        output.setText(Password);
+        newPassword = randomWord(getAssets().open("words.json"),editLength.getText().toString());
+        newPassword = updateBase(newPassword);
+        editNewPassword.setText(newPassword);
     }
 
 }

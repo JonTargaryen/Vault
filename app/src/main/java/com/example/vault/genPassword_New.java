@@ -29,19 +29,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
-public class genPassword_New extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class genPassword_New extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Controllable {
     private DrawerLayout drawer;
     private Toolbar toolbar;
-    private static final String Number = "0123456789";
-    private static final String Other = "!@#$%&*()_+-=[]?";
     Random ran = new Random();
     private CheckBox ck_capitals;
     private CheckBox ck_Numbers;
     private CheckBox ck_symbols;
-    public String Password = "";
+    public String newPassword = "";
     private Button btnGenerateWithCriteria;
-    private EditText output;
-    private EditText passwordLength;
+    private EditText editNewPassword;
+    private EditText editLength;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +61,8 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
         ck_capitals = (CheckBox)findViewById(R.id.ckCapitals);
         ck_Numbers = (CheckBox)findViewById(R.id.ckNumber);
         ck_symbols = (CheckBox)findViewById(R.id.ckSymbol);
-        output = (EditText)findViewById(R.id.editNewPassword);
-        passwordLength = (EditText)findViewById(R.id.editLength);
+        editNewPassword = (EditText)findViewById(R.id.editNewPassword);
+        editLength = (EditText)findViewById(R.id.editLength);
         btnGenerateWithCriteria = (Button)findViewById(R.id.btnGenerateWithCriteria);
         btnGenerateWithCriteria.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +80,7 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
 
     public void returnToNewPassword(View View){
         try{
-            String generatedPassword = output.getText().toString();
+            String generatedPassword = editNewPassword.getText().toString();
             Intent mIntent= new Intent(this, genPassword_New.class);
             mIntent.putExtra("genPassword_New",generatedPassword);
             setResult(RESULT_OK, mIntent);
@@ -94,7 +92,7 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
 
     public void CreatePassword(View view){
         Intent intent = new Intent(this, newPassword.class);
-        intent.putExtra("Password", Password);
+        intent.putExtra("Password", newPassword);
         startActivity(intent);
     }
 
@@ -123,7 +121,8 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
         Intent intent = null;
         switch (key){
             case "nav_home":
-                finish();
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
             case "nav_new":
                 intent = new Intent(this, newPassword.class);
@@ -138,38 +137,6 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
                 startActivity(intent);
                 break;
         }
-    }
-
-    private String randomWord(String password) throws IOException, JSONException{
-        InputStream is = getAssets().open("words.json");
-        int size = is.available();
-        byte[]  buffer = new byte[size];
-        is.read(buffer);
-        is.close();
-        String json = new String(buffer,"UTF-8");
-        JSONObject o = new JSONObject(json);
-        String length = passwordLength.getText().toString();
-        int i = Integer.parseInt(length);
-        int remainder = 0;
-        if(i > 8){
-            remainder = i - 8;
-        }
-        password = "";
-        if(remainder > 0){
-            JSONArray words = (JSONArray) o.get(Integer.toString(remainder));
-            int charIndex = ran.nextInt(words.length());
-            password +=  words.get(charIndex).toString() + " ";
-        }
-        if(i < 8){
-            JSONArray words = (JSONArray) o.get(length);
-            int charIndex = ran.nextInt(words.length());
-            password += words.get(charIndex).toString();
-            return password;
-        }
-        JSONArray words = (JSONArray) o.get("8");
-        int charIndex = ran.nextInt(words.length());
-        password += words.get(charIndex).toString();
-        return password;
     }
 
     private String updateBase(String password){
@@ -195,8 +162,8 @@ public class genPassword_New extends AppCompatActivity implements NavigationView
     }
 
     private void generatePassword() throws IOException, JSONException {
-        Password = randomWord(Password);
-        Password = updateBase(Password);
-        output.setText(Password);
+        newPassword = randomWord(getAssets().open("words.json"),editLength.getText().toString());
+        newPassword = updateBase(newPassword);
+        editNewPassword.setText(newPassword);
     }
 }

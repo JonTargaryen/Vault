@@ -23,19 +23,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Set Custom Toolbar
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.homeTitle));
         setSupportActionBar(toolbar);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Set Custom Navigation Drawer
         drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        //button methods
+        //Navigation Button Mmethods
         findViewById(R.id.txtNew).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,17 +58,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    @Override
-    protected void onResume() {
-        navActivity("nav_home");
-        super.onResume();
-    }
-
+    //Drawer Navigation
     public void navActivity(String key){
         Intent intent = null;
         switch (key){
             case "nav_home":
-//                Toast.makeText(getApplicationContext(), "Already on home.",Toast.LENGTH_SHORT).show();
                 break;
             case "nav_new":
                 intent = new Intent(this, newPassword.class);
@@ -83,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    //Drawer Navigation
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){

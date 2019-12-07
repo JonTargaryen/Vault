@@ -26,14 +26,6 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -48,7 +40,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-public class newPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener{
+public class newPassword extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, Controllable{
 
     //Initialize Encryption
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -58,8 +50,6 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
     // private String TextToEncrypt;
     private String EncryptedText;
     private String DecryptedText;
-
-
 
     private DrawerLayout drawer;
     private Toolbar toolbar;
@@ -102,7 +92,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_password);
 
-
+        //Setup Toolbar
         myClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.NewPassword));
@@ -110,12 +100,14 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Setup Navigation Drawer
         drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        //Initialize UI's Edit Texts
         editHex = (EditText)findViewById(R.id.editHex);
         editName = (EditText)findViewById(R.id.editName);
         editURL = (EditText)findViewById(R.id.editURL);
@@ -160,12 +152,14 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
         btnBrown = (Button)findViewById(R.id.btnBrown);
         btnBrown.setOnClickListener(this);
 
+        //Handle Intent from Generate Password Activity
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            String password = getIntent().getStringExtra("Password");
+            String password = getIntent().getStringExtra("text");
             editPassword.setText(password);
         }
 
+        //Live Custom Color Changing
         editHex.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {            }
@@ -180,6 +174,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
             public void afterTextChanged(Editable editable) {            }
         });
 
+        //Copy Password to Clipboard
         btnCopy = (Button)findViewById(R.id.btnCopy);
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,6 +187,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
+        //ATTEMPT open URL in Browser
         btnLaunch = (Button)findViewById(R.id.btnLaunch);
         btnLaunch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,10 +207,12 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
+        //Save Password to File
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Get Activity Information
                 String Name = editName.getText().toString();
                 String URL = editURL.getText().toString();
                 String UserName = editUserName.getText().toString();
@@ -222,83 +220,12 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                 String Email = editEmail.getText().toString();
                 String ColorHex = editHex.getText().toString();
 
+                //Instantiate Password Object
                 Password pass = new Password(
                         Name, URL, UserName, Password, Email, ColorHex);
-                try {
-                    File file = new File(getDataDir(),getString(R.string.json));
-                    int objectIndex = -1;
-                    if (file.createNewFile()) {
-                        BufferedWriter output = null;
-                        try {
-                            JSONObject root = new JSONObject();
-                            JSONArray passwords = new JSONArray();
-                            root.put("passwords", passwords);
-                            output = new BufferedWriter(new FileWriter(file));
-                            //Encrypt here
-                            output.write(root.toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            output.close();
-                        }
-                    }
 
-                    BufferedReader input = null;
-                    String json = "";
-                    try{
-
-                        //Decrypt here
-                        input = new BufferedReader(new FileReader(file));
-                        String line;
-                        while ((line = input.readLine()) != null) {
-                            json += line;
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }finally {
-                        input.close();
-                    }
-
-                    JSONObject root = new JSONObject(json);
-                    JSONArray passwords = root.getJSONArray("passwords");
-
-                    //search for this entry already in the json file
-                    for (int i = 0; i < passwords.length(); i++) {
-                        JSONObject iteratorJSON = passwords.getJSONObject(i);
-                        if (iteratorJSON.get("Name").equals(pass.getName())) {
-                            passwords.remove(i);
-                            objectIndex = i;
-                            break;
-                        }
-                    }
-
-                    JSONObject thisPassword = new JSONObject();
-                    thisPassword.put("Name", pass.getName());
-                    thisPassword.put("URL", pass.getURL());
-                    thisPassword.put("UserName", pass.getUserName());
-                    thisPassword.put("Password", pass.getPassword());
-                    thisPassword.put("Email", pass.getEmail());
-                    thisPassword.put("ColorHex", pass.getColorHex());
-
-                    passwords.put(thisPassword);
-                    root.put("passwords",passwords);
-                    BufferedWriter output = null;
-                    try {
-                        output = new BufferedWriter(new FileWriter(file));
-                        //Encrypt Here
-                        //output.write(encryptText(root.toString()));
-                        output.write(root.toString());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        output.close();
-                    }
-
-                    Toast.makeText(getApplicationContext(),"Saved Successfully.",Toast.LENGTH_SHORT).show();
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(),"Save Failed.",Toast.LENGTH_SHORT).show();
-                }
+                //Call Controllable Interface's savePassword Method.
+                savePassword(pass, view, getApplicationContext(), getDataDir(),getString(R.string.json));
             }
         });
 
@@ -313,10 +240,6 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
         {
             e.printStackTrace();
         }
-
-
-
-
 
     }
 
@@ -371,12 +294,14 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
         return DecryptedText;
     }
 
+    //Intent to genPassword_new activity
     public void moveToGenerateActivity(View view)
     {
         Intent intent = new Intent(this, genPassword_New.class);
         startActivityForResult(intent,request_code);
     }
 
+    //Handle response from genPassword_new Activity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -387,6 +312,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    //Drawer Navigation
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
@@ -408,11 +334,13 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+    //Drawer Navigation
     private void navActivity(String key){
         Intent intent = null;
         switch (key){
             case "nav_home":
-                finish();
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
             case "nav_new":
 //                Toast.makeText(getApplicationContext(),"Already on New com.example.vault.Password", Toast.LENGTH_SHORT).show();
@@ -427,6 +355,8 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
                 break;
         }
     }
+
+    //Update Edit Texts with the Selected Color
     @Override
     public void onClick(View view) {
         uncheckColors();
@@ -531,6 +461,7 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    //Remove 'O' from Color Buttons
     private void uncheckColors(){
         //Row 1
         btnGrey.setText(null);
@@ -554,8 +485,10 @@ public class newPassword extends AppCompatActivity implements NavigationView.OnN
         btnBrown.setText(null);
     }
 
+    //Apply the Provided HEX value to all edit texts
     private void applyColor(String hex){
         try {
+            //check for leading '#'
             if(hex.charAt(0)!= '#') {
                 hex = "#" + hex;
             }

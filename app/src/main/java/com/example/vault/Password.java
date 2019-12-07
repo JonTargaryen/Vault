@@ -1,18 +1,5 @@
 package com.example.vault;
 
-import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-
 public class Password {
     private String Name;
     private String URL;
