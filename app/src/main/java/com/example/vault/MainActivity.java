@@ -12,14 +12,25 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private Toolbar toolbar;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -56,6 +67,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 navActivity("nav_list");
             }
         });
+
+
+        //Check for file for 32 byte array
+
+
+       try {
+
+
+           File Encryption = new File(getDataDir(), "EncryptionBytes.txt");
+           if (Encryption.createNewFile())
+           {
+               BufferedWriter output = null;
+               try
+               {
+                   byte[] encryption_bytes;
+
+                   output = new BufferedWriter(new FileWriter(Encryption));
+                   //output.write(encryption_bytes.toString());
+                   return;
+               }
+
+
+               catch (Exception e)
+               {
+                   e.printStackTrace();
+               } finally
+               {
+                   output.close();
+               }
+           }
+
+           BufferedReader input = null;
+           String EncryptionBytesEnter = "";
+           try {
+               input = new BufferedReader(new FileReader(Encryption));
+               String line;
+               while ((line = input.readLine()) != null) {
+                   EncryptionBytesEnter += line;
+               }
+
+
+           } catch (Exception e) {
+               e.printStackTrace();
+           } finally {
+               input.close();
+           }
+       }
+       catch (Exception e)
+       {
+           e.printStackTrace();
+           Toast.makeText(getApplicationContext(),"Encryption Failed", Toast.LENGTH_SHORT).show();
+       }
+        //Check for file for 12 byte array
     }
 
     //Drawer Navigation

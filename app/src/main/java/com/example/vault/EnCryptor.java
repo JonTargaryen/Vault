@@ -66,9 +66,11 @@ class EnCryptor {
 
     byte[] getEncryption() {
         return encryption;
+        //32 byte array
     }
 
     byte[] getIv() {
         return iv;
+        //12 byte array
     }
 }
