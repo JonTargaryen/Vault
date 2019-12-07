@@ -46,8 +46,12 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
                 R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+    }
 
+    @Override
+    protected void onResume() {
         loadPasswords();
+        super.onResume();
     }
 
     @Override
