@@ -94,7 +94,7 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
     private void loadPasswords(){
         try {
             File file = new File(getDataDir(), getString(R.string.json));
-            JSONArray passwords = readPasswords(getDataDir(), file);
+            JSONArray passwords = readPasswords(file);
 
             passNames = new ArrayList<String>();
 
@@ -106,7 +106,7 @@ public class passList extends AppCompatActivity implements NavigationView.OnNavi
             lvPasswords = (ListView)findViewById(R.id.lvPasswords);
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_list_item_2, passNames);
+                    android.R.layout.simple_list_item_1, passNames);
             lvPasswords.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             lvPasswords.setAdapter(adapter);
 

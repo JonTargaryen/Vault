@@ -1,36 +1,19 @@
 package com.example.vault;
 
 import android.content.Context;
-import android.content.Intent;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatCallback;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.SecureRandom;
 import java.util.Random;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 public interface Controllable {
     static final String Number = "0123456789";
@@ -41,7 +24,7 @@ public interface Controllable {
         try {
             File file = new File(dir, filename);
             JSONObject root = new JSONObject();
-            JSONArray passwords = readPasswords(dir, file);
+            JSONArray passwords = readPasswords(file);
 
             //search for this entry already in the json file
             for (int i = 0; i < passwords.length(); i++) {
@@ -66,15 +49,11 @@ public interface Controllable {
             root.put("passwords",passwords);
 
             //Write JSON array to file
-            BufferedOutputStream output = null;
+            BufferedWriter output = null;
             try {
-                output = new BufferedOutputStream(new FileOutputStream(file));
+                output = new BufferedWriter(new FileWriter(file));
                 //Encrypt JSON
-                String json = root.toString();
-                byte[] yourKey = generateKey("password");
-                byte[] fileBytes = encodeFile(yourKey, json.getBytes("UTF-8"));
-                output.write(fileBytes);
-                output.flush();
+                output.write(AESUtils.encrypt(root.toString()));
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -125,25 +104,21 @@ public interface Controllable {
         }
     }
 
-    default JSONArray readPasswords(File dir, File file){
+    default JSONArray readPasswords(File file){
         JSONObject root = null;
         JSONArray passwords = null;
 
         try{
             //Create new FILE if missing
             if (file.createNewFile()) {
-                BufferedOutputStream output = null;
+                BufferedWriter output = null;
                 try {
                     root = new JSONObject();
                     passwords = new JSONArray();
                     root.put("passwords", passwords);
-                    String baseJSON = root.toString();
-                    output = new BufferedOutputStream(new FileOutputStream(file));
-                    //Encrypt JSON
-                    byte[] yourKey = generateKey("password");
-                    byte[] fileBytes = encodeFile(yourKey, baseJSON.getBytes("UTF-8"));
-                    output.write(fileBytes);
-                    output.flush();
+                    output = new BufferedWriter(new FileWriter(file));
+                    
+                    output.write(AESUtils.encrypt(root.toString()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -155,18 +130,17 @@ public interface Controllable {
             String json = "";
             try{
                 input = new BufferedReader(new FileReader(file));
-                //get file bytes
-                byte[] encryptedBytes;
-                byte[] yourKey = generateKey("password");
-                byte[] decodedData = decodeFile(yourKey, encryptedBytes);
+                String line;
+                while ((line = input.readLine())!= null){
+                    json +=line;
+                }
+                json = AESUtils.decrypt(json);
             }
             catch (Exception e){
                 e.printStackTrace();
             }finally {
-//                input.close();
-             input.close();
+                input.close();
             }
-
             root = new JSONObject(json);
             passwords = root.getJSONArray("passwords");
 
@@ -175,39 +149,5 @@ public interface Controllable {
         }finally {
             return passwords;
         }
-    }
-
-    default public byte[] generateKey(String password) throws Exception
-    {
-        byte[] keyStart = password.getBytes("UTF-8");
-
-        KeyGenerator kgen = KeyGenerator.getInstance("AES");
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        sr.setSeed(keyStart);
-        kgen.init(128, sr);
-        SecretKey skey = kgen.generateKey();
-        return skey.getEncoded();
-    }
-
-    default public byte[] encodeFile(byte[] key, byte[] fileData) throws Exception
-    {
-
-        SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-        byte[] encrypted = cipher.doFinal(fileData);
-
-        return encrypted;
-    }
-
-    default public byte[] decodeFile(byte[] key, byte[] fileData) throws Exception
-    {
-        SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-
-        byte[] decrypted = cipher.doFinal(fileData);
-
-        return decrypted;
     }
 }

@@ -210,7 +210,6 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
         //SET PASSED VALUES
         Intent intent = getIntent();
         int index = intent.getIntExtra("index",-1);
@@ -218,22 +217,7 @@ public class editPassword extends AppCompatActivity implements NavigationView.On
         if(index != -1){
             try {
                 File file = new File(getDataDir(), getString(R.string.json));
-                BufferedReader input = null;
-                String json = "";
-                try {
-                    input = new BufferedReader(new FileReader(file));
-                    String line;
-                    while ((line = input.readLine()) != null) {
-                        json += line;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    input.close();
-                }
-
-                JSONObject root = new JSONObject(json);
-                JSONArray passwords = root.getJSONArray("passwords");
+                JSONArray passwords = readPasswords(file);
                 JSONObject selectedPassword = passwords.getJSONObject(index);
 
                 editName.setText(selectedPassword.getString("Name"));
