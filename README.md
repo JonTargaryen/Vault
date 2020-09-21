@@ -1,7 +1,5 @@
 # Vault
-## CNIT 355 project by Soumit Lahiri, Benjamin Griggs, Ethan Campana. Fall 2019. 
-
-
+## CNIT 355 project by REDACTED
 
 This project is for the final project of the class CNIT 355 at Purdue University.
 
